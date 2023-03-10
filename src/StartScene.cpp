@@ -16,8 +16,8 @@ StartScene::~StartScene()
 
 void StartScene::Draw()
 {
-	DrawDisplayList();
 	TextureManager::Instance().Draw("bg_start", 0, 0);
+	DrawDisplayList();
 }
 
 void StartScene::Update()
@@ -48,6 +48,7 @@ void StartScene::HandleEvents()
 
 void StartScene::Start()
 {
+
 	TextureManager::Instance().Load("../Assets/textures/backgrounds/backGroundstart.png", "bg_start");
 
 	// Music
@@ -75,6 +76,24 @@ void StartScene::Start()
 		m_pStartButton->SetAlpha(255);
 	});
 	AddChild(m_pStartButton);
+
+	const SDL_Color white = { 255, 255, 255, 255 };
+
+	m_pInstructionsLabel = new Label("AI Assignment 3",
+		"Daydream", 20, white, glm::vec2(400.0f, 100.0f));
+	m_pInstructionsLabel->SetParent(this);
+	AddChild(m_pInstructionsLabel, 1);
+
+
+	m_pInstructionsLabel = new Label("By Raven Stinson 101405611 and",
+		"Daydream", 20, white, glm::vec2(400.0f, 150.0f));
+	m_pInstructionsLabel->SetParent(this);
+	AddChild(m_pInstructionsLabel, 1);
+
+	m_pInstructionsLabel = new Label("Assad Ali 101377166 and Jakob Wax",
+		"Daydream", 20, white, glm::vec2(400.0f, 200.0f));
+	m_pInstructionsLabel->SetParent(this);
+	AddChild(m_pInstructionsLabel, 1);
 
 	// Initialize all Inventory Items
 	InventoryManager::Instance().SetInventory("bedroomkey", false);
