@@ -101,6 +101,8 @@ void Player::Update()
 	}
 
 	GetTransform()->position += GetRigidBody()->velocity;
+
+	// Health Bar Movement
 	m_pHealthBar->GetTransform()->position = GetTransform()->position - glm::vec2(6.0f, 20.0f);
 }
 

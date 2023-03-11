@@ -38,7 +38,8 @@ void HealthBar::Clean()
 
 void HealthBar::TakeDamage(const double damage)
 {
-	m_health -= damage;
+	if(m_health > 0)
+		m_health -= damage;
 }
 
 double HealthBar::GetHealth() const
