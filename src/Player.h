@@ -5,9 +5,8 @@
 #include "PlayerAnimationState.h"
 #include "Sprite.h"
 #include "PlayerDirection.h"
-#include <vector>
-#include <map>
 #include "InventoryManager.h"
+#include "HealthBar.h"
 
 class Player final : public Sprite
 {
@@ -29,16 +28,16 @@ public:
 	PlayerDirection GetPlayerDirection();
 	bool GetMovement();
 
-
-
+	void InitHPBar();
+	HealthBar* GetHPBar();
 
 private:
 	void BuildAnimations();
 
 	PlayerAnimationState m_currentAnimationState;
 	PlayerDirection m_currentDirection;
+	HealthBar* m_pHealthBar;
 	bool m_isPlayerMoving = false;
-
 
 };
 

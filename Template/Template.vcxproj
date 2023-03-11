@@ -169,6 +169,7 @@
     <ClCompile Include="..\src\CollisionManager.cpp" />
     <ClCompile Include="..\src\Dresser.cpp" />
     <ClCompile Include="..\src\HallwayScene.cpp" />
+    <ClCompile Include="..\src\HealthBar.cpp" />
     <ClCompile Include="..\src\ImGuiWindowFrame.cpp" />
     <ClCompile Include="..\src\InteractionObject.cpp" />
     <ClCompile Include="..\src\InventoryManager.cpp" />
@@ -218,6 +219,7 @@
     <ClInclude Include="..\src\Config.h" />
     <ClInclude Include="..\src\Dresser.h" />
     <ClInclude Include="..\src\HallwayScene.h" />
+    <ClInclude Include="..\src\HealthBar.h" />
     <ClInclude Include="..\src\ImGuiWindowFrame.h" />
     <ClInclude Include="..\src\InteractionObject.h" />
     <ClInclude Include="..\src\InventoryManager.h" />

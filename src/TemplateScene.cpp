@@ -322,6 +322,7 @@ void TemplateScene::Start()
 	m_pPlayer->SetPlayerDirection(PlayerDirection::DOWN);
 	m_pPlayer->GetRigidBody()->isColliding = false;
 	m_pPlayer->GetTransform()->position = glm::vec2(400,400);
+	m_pPlayer->InitHPBar();
 
 	m_childrenWithoutTB = GetDisplayList().size(); // need to incremented any time you add a new display object that isnt a textbox
 

@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "TextureManager.h"
 
+
 Player::Player() : m_currentAnimationState(PlayerAnimationState::PLAYER_IDLE_DOWN)
 {
 	TextureManager::Instance().LoadSpriteSheet(
@@ -128,6 +129,18 @@ PlayerDirection Player::GetPlayerDirection()
 bool Player::GetMovement()
 {
 	return m_isPlayerMoving;
+}
+
+void Player::InitHPBar()
+{
+	// Initialize health bar
+	m_pHealthBar = new HealthBar(GetTransform()->position - glm::vec2(50.0f, 0.0f));
+	GetParent()->AddChild(m_pHealthBar);
+}
+
+HealthBar* Player::GetHPBar()
+{
+	return m_pHealthBar;
 }
 
 void Player::BuildAnimations()
