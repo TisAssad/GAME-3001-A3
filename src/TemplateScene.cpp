@@ -19,8 +19,6 @@ TemplateScene::~TemplateScene()
 
 void TemplateScene::Draw()
 {
-	TextureManager::Instance().Draw("bedroom", 0, 0);
-
 	if (m_debugView) { // basic debug, shows bounding boxes
 		SDL_SetRenderDrawColor(Renderer::Instance().GetRenderer(), 0, 255, 0, 255);
 		for (const auto display_object : GetDisplayList())
@@ -35,9 +33,10 @@ void TemplateScene::Draw()
 
 		}
 	}
+
 	DrawDisplayList();
 
-	SDL_SetRenderDrawColor(Renderer::Instance().GetRenderer(), 0, 0, 0, 255);
+	SDL_SetRenderDrawColor(Renderer::Instance().GetRenderer(), 255, 255, 255, 255);
 }
 
 void TemplateScene::Update()
@@ -54,12 +53,6 @@ void TemplateScene::Update()
 	// object collision
 	// basic aabb checks between the player and all gameobjects
 	// can be optimized
-	bool collision1 = CollisionManager::AABBCheck(m_pBed, m_pPlayer);
-	bool collision2 = CollisionManager::AABBCheck(m_pDresser, m_pPlayer);
-	bool collision3 = CollisionManager::AABBCheck(m_pWardrobe, m_pPlayer);
-	bool collision4 = CollisionManager::AABBCheck(m_pTable, m_pPlayer);
-
-	m_pPlayer->GetRigidBody()->isColliding = collision1 || collision2 || collision3 || collision4 || wallCollsion;
 
 	if(m_pPlayer->GetRigidBody()->isColliding)
 	{
@@ -209,39 +202,7 @@ void TemplateScene::HandleEvents()
 	if(EventManager::Instance().KeyPressed(SDL_SCANCODE_SPACE))
 	{
 		if (!m_textBoxOnScreen) { // If there isn't a text box
-			if (m_pBed->ObjectInteration(m_pPlayer)) // bed interaction
-			{
-				GetTextBox("This is your bed", glm::vec2{ 0, 680 });
-				m_textBoxOnScreen = true;
-				std::cout << "Interacting with Bed" << std::endl;
-			}
-			else if (m_pDresser->ObjectInteration(m_pPlayer)) // dresser interaction
-			{
-				if (/*InventoryManager::Instance().GetInventoryMap().empty() || */!InventoryManager::Instance().GetInventory("bedroomkey")) // if the player doesn't have the key
-				{
-					GetTextBox("You find a key in the top shelf", glm::vec2{ 0, 680 });
-					InventoryManager::Instance().SetInventory("bedroomkey", true); // set the roomkey to true
-				}
-				else { // default text
-					GetTextBox("There's nothing else in here", glm::vec2{ 0, 680 }); 
-				}
-				std::cout << "Interacting with Dresser" << std::endl;
-				m_textBoxOnScreen = true;
-			}
-			else if (m_pTable->ObjectInteration(m_pPlayer)) // table interaction
-			{
-				GetTextBox("This is your table", glm::vec2{ 0, 680 });
-				std::cout << "Interacting with Table" << std::endl;
-				m_textBoxOnScreen = true;
-			}
-			else if (m_pWardrobe->ObjectInteration(m_pPlayer)) // wardrobe interaction
-			{
-				GetTextBox("This is your wardrobe", glm::vec2{ 0, 680 }, 5); // Setting the layer index is important if you want more than 1 text box
-				GetTextBox("Full of 15 of the same outfits, as it should be", glm::vec2{ 0, 680 }, 4); // highest is displayed first
-				m_textBoxOnScreen = true;
-				std::cout << "Interacting with Wardrobe" << std::endl;
-			}
-			else if(m_pIO->ObjectInteration(m_pPlayer)) // interaction object, the door
+			if(m_pIO->ObjectInteration(m_pPlayer)) // interaction object, the door
 			{
 				if (InventoryManager::Instance().GetInventory("bedroommaster"))
 				{
@@ -292,23 +253,6 @@ void TemplateScene::Start()
 	// Always draw background first
 
 	TextureManager::Instance().Load("../Assets/textures/backgrounds/bedroom.png", "bedroom");
-
-	m_pBed = new Bed;
-	AddChild(m_pBed, 0);
-	m_pBed->GetTransform()->position = glm::vec2(100,250);
-
-	m_pDresser = new Dresser;
-	AddChild(m_pDresser, 0);
-	m_pDresser->GetTransform()->position = glm::vec2(100 + m_pBed->GetWidth(), 250);
-	m_pDresser->GetTransform()->position = glm::vec2(100 + m_pBed->GetWidth(), 250);
-
-	m_pTable = new Table;
-	AddChild(m_pTable, 0);
-	m_pTable->GetTransform()->position = glm::vec2(500, 500);
-
-	m_pWardrobe = new Wardrobe;
-	AddChild(m_pWardrobe,0);
-	m_pWardrobe->GetTransform()->position = glm::vec2(500, 150);
 
 	// an interaction object
 	// a simple object with no texture, and is only used for interaction

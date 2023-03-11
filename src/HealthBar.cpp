@@ -21,8 +21,10 @@ HealthBar::~HealthBar()
 
 void HealthBar::Draw()
 {
-	Util::DrawRect(GetTransform()->position, GetWidth(), GetHeight(), { 128,128,128,255 });
-	Util::DrawRect(GetTransform()->position + glm::vec2(5,5) , m_health, GetHeight() - 5, {0,255,0,255});
+	//SDL_SetRenderDrawColor(Renderer::Instance().GetRenderer(), 128, 128, 128, 255);
+	Util::DrawFilledRect(GetTransform()->position, GetWidth(), GetHeight(), { 128, 128, 128, 255 });
+	//SDL_SetRenderDrawColor(Renderer::Instance().GetRenderer(), 0, 255, 0, 255);
+	Util::DrawFilledRect(GetTransform()->position + glm::vec2(5,5) , m_health, GetHeight() - 5, { 0, 255, 0, 255 });
 }
 
 void HealthBar::Update()

@@ -4,10 +4,6 @@
 
 #include "Scene.h"
 #include "Player.h"
-#include "Bed.h"
-#include "Dresser.h"
-#include "Table.h"
-#include "Wardrobe.h"
 #include "Label.h"
 #include "Renderer.h"
 #include "InteractionObject.h"
@@ -38,11 +34,6 @@ private:
 	glm::vec2 m_mousePosition;
 
 	Player* m_pPlayer;
-
-	Bed* m_pBed;
-	Dresser* m_pDresser;
-	Table* m_pTable;
-	Wardrobe* m_pWardrobe;
 	InteractionObject* m_pIO;
 
 	bool m_left, m_right, m_up, m_down;

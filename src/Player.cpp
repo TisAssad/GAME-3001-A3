@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "TextureManager.h"
+#include "Util.h"
 
 
 Player::Player() : m_currentAnimationState(PlayerAnimationState::PLAYER_IDLE_DOWN)
@@ -78,6 +79,7 @@ void Player::Draw()
 		break;
 	}
 
+	m_pHealthBar->Draw();
 }
 
 void Player::Update()
