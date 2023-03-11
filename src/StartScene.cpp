@@ -90,7 +90,7 @@ void StartScene::Start()
 	m_pInstructionsLabel->SetParent(this);
 	AddChild(m_pInstructionsLabel, 1);
 
-	m_pInstructionsLabel = new Label("Assad Ali 101377166 and Jakob Wax",
+	m_pInstructionsLabel = new Label("Assad Ali 101377166 and Jakob Wax 101406885",
 		"Daydream", 20, white, glm::vec2(400.0f, 200.0f));
 	m_pInstructionsLabel->SetParent(this);
 	AddChild(m_pInstructionsLabel, 1);
