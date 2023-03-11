@@ -30,7 +30,6 @@ void TemplateScene::Draw()
 			Util::DrawRect(glm::vec2(display_object->GetTransform()->position.x,
 				display_object->GetTransform()->position.y),
 				display_object->GetWidth(), display_object->GetHeight());
-
 		}
 	}
 
@@ -110,7 +109,7 @@ void TemplateScene::HandleEvents()
 	//	m_pPlayer->GetTransform()->position = glm::vec2(400.0f, 400.0f);
 	//}
 
-	std::cout << m_left << m_right << m_up << m_down << std::endl;
+	//std::cout << m_left << m_right << m_up << m_down << std::endl;
 
 	// handle player movement if no Game Controllers found & there is no text box on screen
 	if (SDL_NumJoysticks() < 1 && !m_textBoxOnScreen) 
@@ -241,6 +240,11 @@ void TemplateScene::HandleEvents()
 		{
 			std::cout << "Not within an interaction radius" << std::endl;
 		}
+	}
+
+	if(EventManager::Instance().MousePressed(1))
+	{
+		m_pPlayer->GetHPBar()->TakeDamage(6);
 	}
 	
 }

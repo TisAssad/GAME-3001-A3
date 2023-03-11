@@ -101,6 +101,7 @@ void Player::Update()
 	}
 
 	GetTransform()->position += GetRigidBody()->velocity;
+	m_pHealthBar->GetTransform()->position = GetTransform()->position - glm::vec2(6.0f, 20.0f);
 }
 
 void Player::Clean()
@@ -136,7 +137,7 @@ bool Player::GetMovement()
 void Player::InitHPBar()
 {
 	// Initialize health bar
-	m_pHealthBar = new HealthBar(GetTransform()->position - glm::vec2(50.0f, 0.0f));
+	m_pHealthBar = new HealthBar(GetTransform()->position - glm::vec2(0.0f, 20.0f));
 	GetParent()->AddChild(m_pHealthBar);
 }
 
