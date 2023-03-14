@@ -374,4 +374,9 @@
       <Filter>DOCS</Filter>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\Assets\sprites\player.png">
+      <Filter>Assets</Filter>
+    </Image>
+  </ItemGroup>
 </Project>

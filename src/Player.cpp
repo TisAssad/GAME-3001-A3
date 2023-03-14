@@ -6,8 +6,8 @@
 Player::Player() : m_currentAnimationState(PlayerAnimationState::PLAYER_IDLE_DOWN)
 {
 	TextureManager::Instance().LoadSpriteSheet(
-		"../Assets/sprites/yume_spritesheet.txt",
-		"../Assets/sprites/yume_spritesheet.png",
+		"../Assets/sprites/player.txt",
+		"../Assets/sprites/player.png",
 		"spritesheet");
 
 	SetSpriteSheet(TextureManager::Instance().GetSpriteSheet("spritesheet"));
@@ -16,10 +16,10 @@ Player::Player() : m_currentAnimationState(PlayerAnimationState::PLAYER_IDLE_DOW
 	GetTransform()->scale = {2.0f, 2.0f};
 	
 	// set frame width
-	SetWidth(32 * GetTransform()->scale.x);
+	SetWidth(20 * GetTransform()->scale.x);
 
 	// set frame height
-	SetHeight(32 * GetTransform()->scale.y);
+	SetHeight(25 * GetTransform()->scale.y);
 
 	GetTransform()->position = glm::vec2(400.0f, 300.0f);
 	GetRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
@@ -58,7 +58,10 @@ void Player::Draw()
 		TextureManager::Instance().PlayAnimation("spritesheet", GetAnimation("idleRight"),
 			x, y, 0.20f, GetTransform()->scale, 0, 255, false);
 		break;
-
+	case PlayerAnimationState::PLAYER_RUN_RIGHT:
+		TextureManager::Instance().PlayAnimation("spritesheet", GetAnimation("runRight"),
+			x, y, 0.4f, GetTransform()->scale, 0, 255, false);
+		break;
 	case PlayerAnimationState::PLAYER_RUN_DOWN:
 		TextureManager::Instance().PlayAnimation("spritesheet", GetAnimation("runDown"),
 			x, y, 0.20f, GetTransform()->scale, 0, 255, false);
@@ -69,11 +72,7 @@ void Player::Draw()
 		break;
 	case PlayerAnimationState::PLAYER_RUN_UP:
 		TextureManager::Instance().PlayAnimation("spritesheet", GetAnimation("runUp"),
-			x, y, 0.20f, GetTransform()->scale, 0, 255, false);
-		break;
-	case PlayerAnimationState::PLAYER_RUN_RIGHT:
-		TextureManager::Instance().PlayAnimation("spritesheet", GetAnimation("runRight"),
-			x, y, 0.20f, GetTransform()->scale, 0, 255, false);
+			x, y, 0.4f, GetTransform()->scale, 0, 255, false);
 		break;
 	default:
 		break;
@@ -151,56 +150,64 @@ HealthBar* Player::GetHPBar()
 void Player::BuildAnimations()
 {
 	//Idle
-	auto idleDown_animation = Animation();
-	idleDown_animation.name = "idleDown";
-	idleDown_animation.frames.push_back(GetSpriteSheet()->GetFrame("yume-idle-0"));
-	SetAnimation(idleDown_animation);
+	auto idleRight_animation = Animation();
+	idleRight_animation.name = "idleRight";
+	idleRight_animation.frames.push_back(GetSpriteSheet()->GetFrame("player-idle-0"));
+	SetAnimation(idleRight_animation);
 
 	auto idleUp_animation = Animation();
 	idleUp_animation.name = "idleUp";
-	idleUp_animation.frames.push_back(GetSpriteSheet()->GetFrame("yume-idle-1"));
+	idleUp_animation.frames.push_back(GetSpriteSheet()->GetFrame("player-idle-1"));
 	SetAnimation(idleUp_animation);
 
 	auto idleLeft_animation = Animation();
 	idleLeft_animation.name = "idleLeft";
-	idleLeft_animation.frames.push_back(GetSpriteSheet()->GetFrame("yume-idle-2"));
+	idleLeft_animation.frames.push_back(GetSpriteSheet()->GetFrame("player-idle-2"));
 	SetAnimation(idleLeft_animation);
 
-	auto idleRight_animation = Animation();
-	idleRight_animation.name = "idleRight";
-	idleRight_animation.frames.push_back(GetSpriteSheet()->GetFrame("yume-idle-3"));
-	SetAnimation(idleRight_animation);
+	auto idleDown_animation = Animation();
+	idleDown_animation.name = "idleDown";
+	idleDown_animation.frames.push_back(GetSpriteSheet()->GetFrame("player-idle-3"));
+	SetAnimation(idleDown_animation);
 
 	// Runing
-	auto runDown_animation = Animation();
-	runDown_animation.name = "runDown";
-	runDown_animation.frames.push_back(GetSpriteSheet()->GetFrame("yume-run-0"));
-	runDown_animation.frames.push_back(idleDown_animation.frames[0]);
-	runDown_animation.frames.push_back(GetSpriteSheet()->GetFrame("yume-run-1"));
-	runDown_animation.frames.push_back(idleDown_animation.frames[0]);
-	SetAnimation(runDown_animation);
+	auto runRight_animation = Animation();
+	runRight_animation.name = "runRight";
+	runRight_animation.frames.push_back(idleRight_animation.frames[0]);
+	runRight_animation.frames.push_back(GetSpriteSheet()->GetFrame("player-right-0"));
+	runRight_animation.frames.push_back(GetSpriteSheet()->GetFrame("player-right-1"));
+	runRight_animation.frames.push_back(GetSpriteSheet()->GetFrame("player-right-2"));
+	runRight_animation.frames.push_back(GetSpriteSheet()->GetFrame("player-right-3"));
+	runRight_animation.frames.push_back(GetSpriteSheet()->GetFrame("player-right-4"));
+	SetAnimation(runRight_animation);
 
 	auto runUp_animation = Animation();
 	runUp_animation.name = "runUp";
-	runUp_animation.frames.push_back(GetSpriteSheet()->GetFrame("yume-run-2"));
 	runUp_animation.frames.push_back(idleUp_animation.frames[0]);
-	runUp_animation.frames.push_back(GetSpriteSheet()->GetFrame("yume-run-3"));
-	runUp_animation.frames.push_back(idleUp_animation.frames[0]);
+	runUp_animation.frames.push_back(GetSpriteSheet()->GetFrame("player-up-0"));
+	runUp_animation.frames.push_back(GetSpriteSheet()->GetFrame("player-up-1"));
+	runUp_animation.frames.push_back(GetSpriteSheet()->GetFrame("player-up-2"));
+	runUp_animation.frames.push_back(GetSpriteSheet()->GetFrame("player-up-3"));
+	runUp_animation.frames.push_back(GetSpriteSheet()->GetFrame("player-up-4"));
 	SetAnimation(runUp_animation);
 
 	auto runLeft_animation = Animation();
 	runLeft_animation.name = "runLeft";
-	runLeft_animation.frames.push_back(GetSpriteSheet()->GetFrame("yume-run-4"));
 	runLeft_animation.frames.push_back(idleLeft_animation.frames[0]);
-	runLeft_animation.frames.push_back(GetSpriteSheet()->GetFrame("yume-run-5"));
-	runLeft_animation.frames.push_back(idleLeft_animation.frames[0]);
+	runLeft_animation.frames.push_back(GetSpriteSheet()->GetFrame("player-left-0"));
+	runLeft_animation.frames.push_back(GetSpriteSheet()->GetFrame("player-left-1"));
+	runLeft_animation.frames.push_back(GetSpriteSheet()->GetFrame("player-left-2"));
+	runLeft_animation.frames.push_back(GetSpriteSheet()->GetFrame("player-left-3"));
+	runLeft_animation.frames.push_back(GetSpriteSheet()->GetFrame("player-left-4"));
 	SetAnimation(runLeft_animation);
 
-	auto runRight_animation = Animation();
-	runRight_animation.name = "runRight";
-	runRight_animation.frames.push_back(GetSpriteSheet()->GetFrame("yume-run-6"));
-	runRight_animation.frames.push_back(idleRight_animation.frames[0]);
-	runRight_animation.frames.push_back(GetSpriteSheet()->GetFrame("yume-run-7"));
-	runRight_animation.frames.push_back(idleRight_animation.frames[0]);
-	SetAnimation(runRight_animation);
+	auto runDown_animation = Animation();
+	runDown_animation.name = "runDown";
+	runDown_animation.frames.push_back(idleDown_animation.frames[0]);
+	runDown_animation.frames.push_back(GetSpriteSheet()->GetFrame("player-down-0"));
+	runDown_animation.frames.push_back(GetSpriteSheet()->GetFrame("player-down-1"));
+	runDown_animation.frames.push_back(GetSpriteSheet()->GetFrame("player-down-2"));
+	runDown_animation.frames.push_back(GetSpriteSheet()->GetFrame("player-down-3"));
+	runDown_animation.frames.push_back(GetSpriteSheet()->GetFrame("player-down-4"));
+	SetAnimation(runDown_animation);
 }
