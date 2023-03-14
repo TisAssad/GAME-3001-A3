@@ -64,11 +64,11 @@ void Player::Draw()
 		break;
 	case PlayerAnimationState::PLAYER_RUN_DOWN:
 		TextureManager::Instance().PlayAnimation("spritesheet", GetAnimation("runDown"),
-			x, y, 0.20f, GetTransform()->scale, 0, 255, false);
+			x, y, 0.40f, GetTransform()->scale, 0, 255, false);
 		break;
 	case PlayerAnimationState::PLAYER_RUN_LEFT:
 		TextureManager::Instance().PlayAnimation("spritesheet", GetAnimation("runLeft"),
-			x, y, 0.20f, GetTransform()->scale, 0, 255, false);
+			x, y, 0.40f, GetTransform()->scale, 0, 255, false);
 		break;
 	case PlayerAnimationState::PLAYER_RUN_UP:
 		TextureManager::Instance().PlayAnimation("spritesheet", GetAnimation("runUp"),
