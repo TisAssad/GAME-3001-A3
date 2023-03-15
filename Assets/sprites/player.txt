@@ -37,4 +37,4 @@ attack-left-3 2240 0 64 64
 attack-down-0 2300 0 64 64
 attack-down-1 2364 0 64 64
 attack-down-2 2428 0 64 64
-attack-down-3 2492 0 64 64s
+attack-down-3 2492 0 64 64

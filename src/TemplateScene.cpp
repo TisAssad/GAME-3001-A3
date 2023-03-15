@@ -23,7 +23,7 @@ void TemplateScene::Draw()
 		SDL_SetRenderDrawColor(Renderer::Instance().GetRenderer(), 0, 255, 0, 255);
 		for (const auto display_object : GetDisplayList())
 		{
-			if (display_object->GetType() == GameObjectType::TEXT_BOX)
+			if (display_object->GetType() == GameObjectType::TEXT_BOX || display_object->GetType() == GameObjectType::PLAYER)
 			{
 				continue;
 			}
@@ -31,6 +31,9 @@ void TemplateScene::Draw()
 				display_object->GetTransform()->position.y),
 				display_object->GetWidth(), display_object->GetHeight());
 		}
+		Util::DrawRect({ m_pPlayer->GetTransform()->position.x - m_pPlayer->GetWidth() / 2,
+			m_pPlayer->GetTransform()->position.y - m_pPlayer->GetHeight() / 2 },
+			m_pPlayer->GetWidth(), m_pPlayer->GetHeight());
 	}
 
 	DrawDisplayList();
@@ -200,46 +203,6 @@ void TemplateScene::HandleEvents()
 	if(EventManager::Instance().KeyPressed(SDL_SCANCODE_SPACE))
 	{
 		m_pPlayer->Attack();
-		//if (!m_textBoxOnScreen) { // If there isn't a text box
-		//	if(m_pIO->ObjectInteration(m_pPlayer)) // interaction object, the door
-		//	{
-		//		if (InventoryManager::Instance().GetInventory("bedroommaster"))
-		//		{
-		//			GetTextBox("The door to the hallway", glm::vec2{ 0, 680 }, 5);
-		//			m_changeState = true;
-		//		}
-		//		else {
-		//			GetTextBox("The door is locked", glm::vec2{ 0, 680 }, 5);
-		//			if (InventoryManager::Instance().GetInventory("bedroomkey")) // if the player has the key
-		//			{
-		//				GetTextBox("You use the key to unlock the door", glm::vec2{ 0, 680 }, 4);
-		//				m_changeState = true; // change state
-		//				InventoryManager::Instance().SetInventory("bedroomkey", false);
-		//				InventoryManager::Instance().SetInventory("bedroommaster", true);
-		//			}
-		//		}
-		//		m_textBoxOnScreen = true; 
-		//	}
-		//}
-		//else if(GetDisplayList().size() != m_childrenWithoutTB) // if there is a text box on screen
-		//{
-		//	// Removing 2 children, the text and the box
-		//	RemoveChild(GetDisplayList().back());
-		//	RemoveChild(GetDisplayList().back());
-		//	if(GetDisplayList().size() == m_childrenWithoutTB) // if there isn't a text box
-		//	{
-		//		m_textBoxOnScreen = false; // reset the if statement
-		//		if (m_changeState) // if we are changing state
-		//		{
-		//			Game::Instance().ChangeSceneState(SceneState::HALLWAY); // this can be any state, ensure there is a case for it though
-		//		}
-
-		//	}
-		//}
-		//else // default
-		//{
-		//	std::cout << "Not within an interaction radius" << std::endl;
-		//}
 	}
 
 	if(EventManager::Instance().MousePressed(1))
