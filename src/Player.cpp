@@ -4,7 +4,7 @@
 #include "TextureManager.h"
 #include "Util.h"
 
-Player::Player() : m_currentAnimationState(PlayerAnimationState::PLAYER_IDLE_DOWN)
+Player::Player() : m_currentAnimationState(PlayerAnimationState::PLAYER_IDLE_DOWN), m_melee(true)
 {
 	TextureManager::Instance().LoadSpriteSheet(
 		"../Assets/sprites/player.txt",
@@ -84,7 +84,8 @@ void Player::Draw()
 			m_attackAnimTimer = 0;
 			m_isPlayerAttacking = false;
 			GetAnimation("attackRight").current_frame = 0;
-			GetParent()->RemoveChild(m_pHitBox);
+			if(m_melee)
+				GetParent()->RemoveChild(m_pHitBox);
 			if(m_isPlayerMoving)
 			{
 				SetAnimationState(PlayerAnimationState::PLAYER_RUN_RIGHT);
@@ -104,7 +105,8 @@ void Player::Draw()
 			m_attackAnimTimer = 0;
 			m_isPlayerAttacking = false;
 			GetAnimation("attackUp").current_frame = 0;
-			GetParent()->RemoveChild(m_pHitBox);
+			if(m_melee)
+				GetParent()->RemoveChild(m_pHitBox);
 			m_pHealthBar->SetEnabled(true);
 			if (m_isPlayerMoving)
 			{
@@ -125,7 +127,8 @@ void Player::Draw()
 			m_attackAnimTimer = 0;
 			m_isPlayerAttacking = false;
 			GetAnimation("attackLeft").current_frame = 0;
-			GetParent()->RemoveChild(m_pHitBox);
+			if(m_melee)
+				GetParent()->RemoveChild(m_pHitBox);
 			if (m_isPlayerMoving)
 			{
 				SetAnimationState(PlayerAnimationState::PLAYER_RUN_LEFT);
@@ -145,7 +148,8 @@ void Player::Draw()
 			m_attackAnimTimer = 0;
 			m_isPlayerAttacking = false;
 			GetAnimation("attackDown").current_frame = 0;
-			GetParent()->RemoveChild(m_pHitBox);
+			if (m_melee)
+				GetParent()->RemoveChild(m_pHitBox);
 			if (m_isPlayerMoving)
 			{
 				SetAnimationState(PlayerAnimationState::PLAYER_RUN_DOWN);
@@ -183,6 +187,13 @@ void Player::Update()
 
 	// Health Bar Movement
 	m_pHealthBar->GetTransform()->position = GetTransform()->position - glm::vec2(40.0f, 45.0f);
+	m_pAttackType->GetTransform()->position = GetTransform()->position + glm::vec2(40.0f, -33.0f);
+	if (m_melee) {
+		m_pAttackType->SetText("M");
+	}else
+	{
+		m_pAttackType->SetText("P");
+	}
 
 	// Hitbox movement
 	if (m_isPlayerAttacking)
@@ -210,6 +221,11 @@ void Player::SetMovement(bool isMoving)
 	m_isPlayerMoving = isMoving;
 }
 
+void Player::SetMelee(bool melee)
+{
+	m_melee = melee;
+}
+
 
 PlayerDirection Player::GetPlayerDirection()
 {
@@ -231,6 +247,9 @@ void Player::InitHPBar()
 	// Initialize health bar
 	m_pHealthBar = new HealthBar(GetTransform()->position);
 	GetParent()->AddChild(m_pHealthBar);
+	m_pAttackType = new Label("Default", "Consolas", 20, {255,255,255,255}
+	, GetTransform()->position);
+	GetParent()->AddChild(m_pAttackType);
 }
 
 HealthBar* Player::GetHPBar()
@@ -238,8 +257,9 @@ HealthBar* Player::GetHPBar()
 	return m_pHealthBar;
 }
 
-void Player::Attack()
+void Player::Attack(bool melee)
 {
+	m_melee = melee;
 	if (!m_isPlayerAttacking) {
 		m_isPlayerAttacking = true;
 		
@@ -248,56 +268,67 @@ void Player::Attack()
 		case PlayerDirection::LEFT:
 			SetAnimationState(PlayerAnimationState::PLAYER_SWING_LEFT);
 
-			m_pHitBox = new InteractionObject(GetWidth(), GetHeight());
-			m_pHitBox->GetTransform()->position =
-				glm::vec2(GetTransform()->position.x - GetWidth() - GetWidth() / 2,
-					GetTransform()->position.y - GetHeight() / 2);
-			GetParent()->AddChild(m_pHitBox);
-
-			m_projectileVec.push_back(new Projectile(true, GetTransform()->position, 180));
-			GetParent()->AddChild(m_projectileVec.back());
+			if (m_melee) {
+				m_pHitBox = new InteractionObject(GetWidth(), GetHeight());
+				m_pHitBox->GetTransform()->position =
+					glm::vec2(GetTransform()->position.x - GetWidth() - GetWidth() / 2,
+						GetTransform()->position.y - GetHeight() / 2);
+				GetParent()->AddChild(m_pHitBox);
+			}
+			else {
+				m_projectileVec.push_back(new Projectile(true, GetTransform()->position, 180));
+				GetParent()->AddChild(m_projectileVec.back());
+			}
 			break;
 		case PlayerDirection::RIGHT:
 			SetAnimationState(PlayerAnimationState::PLAYER_SWING_RIGHT);
 
-			m_pHitBox = new InteractionObject(GetWidth(), GetHeight());
-			m_pHitBox->GetTransform()->position =
-				glm::vec2(GetTransform()->position.x + GetWidth() - GetWidth() / 2,
-					GetTransform()->position.y - GetHeight() / 2);
-			GetParent()->AddChild(m_pHitBox);
-
-			m_projectileVec.push_back(new Projectile(true, GetTransform()->position, 0));
-			GetParent()->AddChild(m_projectileVec.back());
+			if (m_melee) {
+				m_pHitBox = new InteractionObject(GetWidth(), GetHeight());
+				m_pHitBox->GetTransform()->position =
+					glm::vec2(GetTransform()->position.x + GetWidth() - GetWidth() / 2,
+						GetTransform()->position.y - GetHeight() / 2);
+				GetParent()->AddChild(m_pHitBox);
+			}
+			else {
+				m_projectileVec.push_back(new Projectile(true, GetTransform()->position, 0));
+				GetParent()->AddChild(m_projectileVec.back());
+			}
 			break;
 		case PlayerDirection::UP:
 			SetAnimationState(PlayerAnimationState::PLAYER_SWING_UP);
-
-			m_pHitBox = new InteractionObject(GetHeight(), GetWidth());
-			m_pHitBox->GetTransform()->position =
-				glm::vec2(GetTransform()->position.x - GetWidth() / 2,
-					GetTransform()->position.y - GetHeight());
-			GetParent()->AddChild(m_pHitBox);
-
-			m_projectileVec.push_back(new Projectile(true, GetTransform()->position, 270));
-			GetParent()->AddChild(m_projectileVec.back());
-
+			if (m_melee) {
+				m_pHitBox = new InteractionObject(GetHeight(), GetWidth());
+				m_pHitBox->GetTransform()->position =
+					glm::vec2(GetTransform()->position.x - GetWidth() / 2,
+						GetTransform()->position.y - GetHeight());
+				GetParent()->AddChild(m_pHitBox);
+			}
+			else {
+				m_projectileVec.push_back(new Projectile(true, GetTransform()->position, 270));
+				GetParent()->AddChild(m_projectileVec.back());
+			}
 			m_pHealthBar->SetEnabled(false);
 			break;
 		case PlayerDirection::DOWN:
 			SetAnimationState(PlayerAnimationState::PLAYER_SWING_DOWN);
-
-			m_pHitBox = new InteractionObject(GetHeight(), GetWidth());
-			m_pHitBox->GetTransform()->position =
-				glm::vec2(GetTransform()->position.x - GetWidth() / 2,
-					GetTransform()->position.y + GetHeight() - GetHeight() / 2);
-			GetParent()->AddChild(m_pHitBox);
-
-			m_projectileVec.push_back(new Projectile(true, GetTransform()->position, 90));
-			GetParent()->AddChild(m_projectileVec.back());
+			if (m_melee) {
+				m_pHitBox = new InteractionObject(GetHeight(), GetWidth());
+				m_pHitBox->GetTransform()->position =
+					glm::vec2(GetTransform()->position.x - GetWidth() / 2,
+						GetTransform()->position.y + GetHeight() - GetHeight() / 2);
+				GetParent()->AddChild(m_pHitBox);
+			}
+			else {
+				m_projectileVec.push_back(new Projectile(true, GetTransform()->position, 90));
+				GetParent()->AddChild(m_projectileVec.back());
+			}
 			break;
 		}
 	}
-	m_pHitBox->SetType(GameObjectType::HITBOX);
+	if (m_melee) {
+		m_pHitBox->SetType(GameObjectType::HITBOX);
+	}
 	
 }
 

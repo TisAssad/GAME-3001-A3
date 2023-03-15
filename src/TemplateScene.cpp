@@ -197,13 +197,14 @@ void TemplateScene::HandleEvents()
 		Game::Instance().ChangeSceneState(SceneState::END);
 	}
 
-	// Object interaction
-	// Place text box related interaction within the first if statement
-	// IMPORTANT: ensure that you set m_textBoxOnScreen = true
-	// without this the text boxes won't work
+	if(EventManager::Instance().KeyPressed(SDL_SCANCODE_E))
+	{
+		m_melee = !m_melee;
+		m_pPlayer->SetMelee(m_melee);
+	}
 	if(EventManager::Instance().KeyPressed(SDL_SCANCODE_SPACE))
 	{
-		m_pPlayer->Attack();
+		m_pPlayer->Attack(m_melee);
 	}
 
 	if(EventManager::Instance().MousePressed(1))
@@ -234,6 +235,8 @@ void TemplateScene::Start()
 	m_pPlayer->GetRigidBody()->isColliding = false;
 	m_pPlayer->GetTransform()->position = glm::vec2(400,400);
 	m_pPlayer->InitHPBar();
+
+	
 
 	m_childrenWithoutTB = GetDisplayList().size(); // need to incremented any time you add a new display object that isnt a textbox
 

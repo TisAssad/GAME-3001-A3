@@ -8,6 +8,7 @@
 #include "InventoryManager.h"
 #include "HealthBar.h"
 #include "InteractionObject.h"
+#include "Label.h"
 #include "Projectile.h"
 
 class Player final : public Sprite
@@ -25,6 +26,7 @@ public:
 	void SetAnimationState(PlayerAnimationState new_state);
 	void SetPlayerDirection(PlayerDirection newDirection);
 	void SetMovement(bool isMoving);
+	void SetMelee(bool melee);
 
 	// getters
 	PlayerDirection GetPlayerDirection();
@@ -34,7 +36,7 @@ public:
 	void InitHPBar();
 	HealthBar* GetHPBar();
 
-	void Attack();
+	void Attack(bool melee = true);
 
 private:
 	void BuildAnimations();
@@ -43,11 +45,13 @@ private:
 	PlayerDirection m_currentDirection;
 	HealthBar* m_pHealthBar{};
 	InteractionObject* m_pHitBox{};
+	Label* m_pAttackType{};
 
 	std::vector<Projectile*> m_projectileVec;
 
 	bool m_isPlayerMoving = false;
 	bool m_isPlayerAttacking = false;
+	bool m_melee;
 	int m_attackAnimTimer{};
 
 };

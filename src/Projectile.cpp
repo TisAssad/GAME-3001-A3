@@ -48,5 +48,5 @@ void Projectile::Clean()
 
 void Projectile::Update()
 {
-	GetTransform()->position += GetCurrentDirection() * 10.0f;
+	this->GetTransform()->position = this->GetTransform()->position + GetCurrentDirection() * 10.0f;
 }

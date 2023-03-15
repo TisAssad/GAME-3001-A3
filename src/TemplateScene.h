@@ -34,7 +34,7 @@ private:
 	glm::vec2 m_mousePosition;
 
 	Player* m_pPlayer;
-
+	bool m_melee = true;
 	bool m_left, m_right, m_up, m_down;
 
 	// UI Items
