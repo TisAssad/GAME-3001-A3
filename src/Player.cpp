@@ -1,4 +1,6 @@
 #include "Player.h"
+
+#include "CollisionManager.h"
 #include "TextureManager.h"
 #include "Util.h"
 
@@ -296,6 +298,7 @@ void Player::Attack()
 		}
 	}
 	m_pHitBox->SetType(GameObjectType::HITBOX);
+	
 }
 
 void Player::BuildAnimations()
