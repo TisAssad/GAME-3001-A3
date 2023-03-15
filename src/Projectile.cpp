@@ -38,7 +38,7 @@ void Projectile::Draw()
 	if(m_fromPlayer)
 	{
 		TextureManager::Instance().Draw("swordBeam", GetTransform()->position,
-			this, GetCurrentHeading());
+			this);
 	}
 }
 
@@ -48,5 +48,5 @@ void Projectile::Clean()
 
 void Projectile::Update()
 {
-	GetTransform()->position += GetCurrentDirection() * 5.0f;
+	GetTransform()->position += GetCurrentDirection() * 10.0f;
 }
