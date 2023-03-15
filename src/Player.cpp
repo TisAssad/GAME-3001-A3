@@ -102,6 +102,7 @@ void Player::Draw()
 			m_isPlayerAttacking = false;
 			GetAnimation("attackUp").current_frame = 0;
 			GetParent()->RemoveChild(m_pHitBox);
+			m_pHealthBar->SetEnabled(true);
 			if (m_isPlayerMoving)
 			{
 				SetAnimationState(PlayerAnimationState::PLAYER_RUN_UP);
@@ -176,7 +177,7 @@ void Player::Update()
 	GetTransform()->position += GetRigidBody()->velocity;
 
 	// Health Bar Movement
-	m_pHealthBar->GetTransform()->position = GetTransform()->position - glm::vec2(6.0f, 20.0f);
+	m_pHealthBar->GetTransform()->position = GetTransform()->position - glm::vec2(40.0f, 45.0f);
 
 	// Hitbox movement
 	if (m_isPlayerAttacking)
@@ -223,7 +224,7 @@ bool Player::GetAttacking()
 void Player::InitHPBar()
 {
 	// Initialize health bar
-	m_pHealthBar = new HealthBar(GetTransform()->position - glm::vec2(0.0f, 20.0f));
+	m_pHealthBar = new HealthBar(GetTransform()->position);
 	GetParent()->AddChild(m_pHealthBar);
 }
 
@@ -260,6 +261,7 @@ void Player::Attack()
 			glm::vec2(GetTransform()->position.x - GetWidth() / 2, 
 				GetTransform()->position.y - GetHeight());
 		GetParent()->AddChild(m_pHitBox);
+		m_pHealthBar->SetEnabled(false);
 		break;
 	case PlayerDirection::DOWN:
 		SetAnimationState(PlayerAnimationState::PLAYER_SWING_DOWN);
