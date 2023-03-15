@@ -175,6 +175,7 @@
     <ClCompile Include="..\src\InventoryManager.cpp" />
     <ClCompile Include="..\src\NavigationObject.cpp" />
     <ClCompile Include="..\src\Obstacle.cpp" />
+    <ClCompile Include="..\src\Projectile.cpp" />
     <ClCompile Include="..\src\Sprite.cpp" />
     <ClCompile Include="..\src\Table.cpp" />
     <ClCompile Include="..\src\TemplateScene.cpp" />
@@ -226,6 +227,7 @@
     <ClInclude Include="..\src\NavigationObject.h" />
     <ClInclude Include="..\src\Obstacle.h" />
     <ClInclude Include="..\src\PlayerDirection.h" />
+    <ClInclude Include="..\src\Projectile.h" />
     <ClInclude Include="..\src\SoundType.h" />
     <ClInclude Include="..\src\Sprite.h" />
     <ClInclude Include="..\src\Table.h" />

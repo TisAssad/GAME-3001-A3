@@ -34,7 +34,6 @@ private:
 	glm::vec2 m_mousePosition;
 
 	Player* m_pPlayer;
-	InteractionObject* m_pIO;
 
 	bool m_left, m_right, m_up, m_down;
 

@@ -2,7 +2,6 @@
 #include "TextureManager.h"
 #include "Util.h"
 
-
 Player::Player() : m_currentAnimationState(PlayerAnimationState::PLAYER_IDLE_DOWN)
 {
 	TextureManager::Instance().LoadSpriteSheet(
@@ -74,6 +73,7 @@ void Player::Draw()
 		TextureManager::Instance().PlayAnimation("spritesheet", GetAnimation("runUp"),
 			x, y, 0.4f, GetTransform()->scale, 0, 255, true);
 		break;
+
 	case PlayerAnimationState::PLAYER_SWING_RIGHT:
 		TextureManager::Instance().PlayAnimation("spritesheet", GetAnimation("attackRight"),
 				x, y, 0.4f, GetTransform()->scale, 0, 255, true);
@@ -93,6 +93,7 @@ void Player::Draw()
 			
 		}
 		break;
+
 	case PlayerAnimationState::PLAYER_SWING_UP:
 		TextureManager::Instance().PlayAnimation("spritesheet", GetAnimation("attackUp"),
 		                                         x, y, 0.4f, GetTransform()->scale, 0, 255, true);
@@ -113,6 +114,7 @@ void Player::Draw()
 			}
 		}
 		break;
+
 	case PlayerAnimationState::PLAYER_SWING_LEFT:
 		TextureManager::Instance().PlayAnimation("spritesheet", GetAnimation("attackLeft"),
 		                                         x, y, 0.4f, GetTransform()->scale, 0, 255, true);
@@ -132,6 +134,7 @@ void Player::Draw()
 			}
 		}
 		break;
+
 	case PlayerAnimationState::PLAYER_SWING_DOWN:
 		TextureManager::Instance().PlayAnimation("spritesheet", GetAnimation("attackDown"),
 		                                         x, y, 0.4f, GetTransform()->scale, 0, 255, true);
@@ -235,43 +238,64 @@ HealthBar* Player::GetHPBar()
 
 void Player::Attack()
 {
-	m_isPlayerAttacking = true;
-	switch(m_currentDirection)
-	{
-	case PlayerDirection::LEFT:
-		SetAnimationState(PlayerAnimationState::PLAYER_SWING_LEFT);
-		m_pHitBox = new InteractionObject(GetWidth(), GetHeight());
-		m_pHitBox->GetTransform()->position = 
-			glm::vec2(GetTransform()->position.x - GetWidth() - GetWidth() / 2, 
-				GetTransform()->position.y - GetHeight() / 2);
-		GetParent()->AddChild(m_pHitBox);
-		break;
-	case PlayerDirection::RIGHT:
-		SetAnimationState(PlayerAnimationState::PLAYER_SWING_RIGHT);
-		m_pHitBox = new InteractionObject(GetWidth(), GetHeight());
-		m_pHitBox->GetTransform()->position =
-			glm::vec2(GetTransform()->position.x + GetWidth() - GetWidth() / 2, 
-				GetTransform()->position.y - GetHeight() / 2);
-		GetParent()->AddChild(m_pHitBox);
-		break;
-	case PlayerDirection::UP:
-		SetAnimationState(PlayerAnimationState::PLAYER_SWING_UP);
-		m_pHitBox = new InteractionObject(GetHeight(), GetWidth());
-		m_pHitBox->GetTransform()->position =
-			glm::vec2(GetTransform()->position.x - GetWidth() / 2, 
-				GetTransform()->position.y - GetHeight());
-		GetParent()->AddChild(m_pHitBox);
-		m_pHealthBar->SetEnabled(false);
-		break;
-	case PlayerDirection::DOWN:
-		SetAnimationState(PlayerAnimationState::PLAYER_SWING_DOWN);
-		m_pHitBox = new InteractionObject(GetHeight(), GetWidth());
-		m_pHitBox->GetTransform()->position =
-			glm::vec2(GetTransform()->position.x - GetWidth() / 2, 
-				GetTransform()->position.y + GetHeight() - GetHeight() / 2);
-		GetParent()->AddChild(m_pHitBox);
-		break;
+	if (!m_isPlayerAttacking) {
+		m_isPlayerAttacking = true;
+		
+		switch (m_currentDirection)
+		{
+		case PlayerDirection::LEFT:
+			SetAnimationState(PlayerAnimationState::PLAYER_SWING_LEFT);
+
+			m_pHitBox = new InteractionObject(GetWidth(), GetHeight());
+			m_pHitBox->GetTransform()->position =
+				glm::vec2(GetTransform()->position.x - GetWidth() - GetWidth() / 2,
+					GetTransform()->position.y - GetHeight() / 2);
+			GetParent()->AddChild(m_pHitBox);
+
+			m_projectileVec.push_back(new Projectile(true, GetTransform()->position, 180));
+			GetParent()->AddChild(m_projectileVec.back());
+			break;
+		case PlayerDirection::RIGHT:
+			SetAnimationState(PlayerAnimationState::PLAYER_SWING_RIGHT);
+
+			m_pHitBox = new InteractionObject(GetWidth(), GetHeight());
+			m_pHitBox->GetTransform()->position =
+				glm::vec2(GetTransform()->position.x + GetWidth() - GetWidth() / 2,
+					GetTransform()->position.y - GetHeight() / 2);
+			GetParent()->AddChild(m_pHitBox);
+
+			m_projectileVec.push_back(new Projectile(true, GetTransform()->position, 0));
+			GetParent()->AddChild(m_projectileVec.back());
+			break;
+		case PlayerDirection::UP:
+			SetAnimationState(PlayerAnimationState::PLAYER_SWING_UP);
+
+			m_pHitBox = new InteractionObject(GetHeight(), GetWidth());
+			m_pHitBox->GetTransform()->position =
+				glm::vec2(GetTransform()->position.x - GetWidth() / 2,
+					GetTransform()->position.y - GetHeight());
+			GetParent()->AddChild(m_pHitBox);
+
+			m_projectileVec.push_back(new Projectile(true, GetTransform()->position, 270));
+			GetParent()->AddChild(m_projectileVec.back());
+
+			m_pHealthBar->SetEnabled(false);
+			break;
+		case PlayerDirection::DOWN:
+			SetAnimationState(PlayerAnimationState::PLAYER_SWING_DOWN);
+
+			m_pHitBox = new InteractionObject(GetHeight(), GetWidth());
+			m_pHitBox->GetTransform()->position =
+				glm::vec2(GetTransform()->position.x - GetWidth() / 2,
+					GetTransform()->position.y + GetHeight() - GetHeight() / 2);
+			GetParent()->AddChild(m_pHitBox);
+
+			m_projectileVec.push_back(new Projectile(true, GetTransform()->position, 90));
+			GetParent()->AddChild(m_projectileVec.back());
+			break;
+		}
 	}
+	m_pHitBox->SetType(GameObjectType::HITBOX);
 }
 
 void Player::BuildAnimations()

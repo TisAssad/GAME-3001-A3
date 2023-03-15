@@ -17,6 +17,7 @@ enum class GameObjectType {
 	NEXT_BUTTON,
 	INTERACTION_OBJECT,
 	TEXT_BOX,
+	HITBOX,
 	NUM_OF_TYPES,
 	BACKGROUND
 };

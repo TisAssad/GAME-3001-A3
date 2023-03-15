@@ -8,6 +8,7 @@
 #include "InventoryManager.h"
 #include "HealthBar.h"
 #include "InteractionObject.h"
+#include "Projectile.h"
 
 class Player final : public Sprite
 {
@@ -42,6 +43,9 @@ private:
 	PlayerDirection m_currentDirection;
 	HealthBar* m_pHealthBar{};
 	InteractionObject* m_pHitBox{};
+
+	std::vector<Projectile*> m_projectileVec;
+
 	bool m_isPlayerMoving = false;
 	bool m_isPlayerAttacking = false;
 	int m_attackAnimTimer{};
