@@ -128,6 +128,24 @@ void Player::Draw()
 			}
 		}
 		break;
+	case PlayerAnimationState::PLAYER_SWING_DOWN:
+		TextureManager::Instance().PlayAnimation("spritesheet", GetAnimation("attackDown"),
+		                                         x, y, 0.4f, GetTransform()->scale, 0, 255, true);
+		if (++m_attackAnimTimer % 15 == 0)
+		{
+			m_attackAnimTimer = 0;
+			m_isPlayerAttacking = false;
+			GetAnimation("attackDown").current_frame = 0;
+			if (m_isPlayerMoving)
+			{
+				SetAnimationState(PlayerAnimationState::PLAYER_RUN_DOWN);
+			}
+			else
+			{
+				SetAnimationState(PlayerAnimationState::PLAYER_IDLE_DOWN);
+			}
+		}
+		break;
 	}
 
 	m_pHealthBar->Draw();
@@ -219,6 +237,7 @@ void Player::Attack()
 		SetAnimationState(PlayerAnimationState::PLAYER_SWING_UP);
 		break;
 	case PlayerDirection::DOWN:
+		SetAnimationState(PlayerAnimationState::PLAYER_SWING_DOWN);
 		break;
 	}
 }
@@ -310,5 +329,13 @@ void Player::BuildAnimations()
 	attackLeft_animation.frames.push_back(GetSpriteSheet()->GetFrame("attack-left-2"));
 	attackLeft_animation.frames.push_back(GetSpriteSheet()->GetFrame("attack-left-3"));
 	SetAnimation(attackLeft_animation);
+
+	auto attackDown_animation = Animation();
+	attackDown_animation.name = "attackDown";
+	attackDown_animation.frames.push_back(GetSpriteSheet()->GetFrame("attack-down-0"));
+	attackDown_animation.frames.push_back(GetSpriteSheet()->GetFrame("attack-down-1"));
+	attackDown_animation.frames.push_back(GetSpriteSheet()->GetFrame("attack-down-2"));
+	attackDown_animation.frames.push_back(GetSpriteSheet()->GetFrame("attack-down-3"));
+	SetAnimation(attackDown_animation);
 	
 }
