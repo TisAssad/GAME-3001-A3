@@ -379,4 +379,9 @@
       <Filter>Assets</Filter>
     </Image>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\Assets\sprites\player.txt">
+      <Filter>Assets</Filter>
+    </Text>
+  </ItemGroup>
 </Project>

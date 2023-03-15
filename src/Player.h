@@ -7,6 +7,7 @@
 #include "PlayerDirection.h"
 #include "InventoryManager.h"
 #include "HealthBar.h"
+#include "InteractionObject.h"
 
 class Player final : public Sprite
 {
@@ -27,17 +28,23 @@ public:
 	// getters
 	PlayerDirection GetPlayerDirection();
 	bool GetMovement();
+	bool GetAttacking();
 
 	void InitHPBar();
 	HealthBar* GetHPBar();
+
+	void Attack();
 
 private:
 	void BuildAnimations();
 
 	PlayerAnimationState m_currentAnimationState;
 	PlayerDirection m_currentDirection;
-	HealthBar* m_pHealthBar;
+	HealthBar* m_pHealthBar{};
+	InteractionObject* m_pHitBox{};
 	bool m_isPlayerMoving = false;
+	bool m_isPlayerAttacking = false;
+	int m_attackAnimTimer{};
 
 };
 

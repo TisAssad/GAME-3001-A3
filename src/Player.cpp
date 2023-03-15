@@ -44,37 +44,112 @@ void Player::Draw()
 	{
 	case PlayerAnimationState::PLAYER_IDLE_DOWN:
 		TextureManager::Instance().PlayAnimation("spritesheet", GetAnimation("idleDown"),
-			x, y, 0.20f, GetTransform()->scale, 0, 255, false);
+			x, y, 0.20f, GetTransform()->scale, 0, 255, true);
 		break;
 	case PlayerAnimationState::PLAYER_IDLE_LEFT:
 		TextureManager::Instance().PlayAnimation("spritesheet", GetAnimation("idleLeft"),
-			x, y, 0.20f, GetTransform()->scale, 0, 255, false);
+			x, y, 0.20f, GetTransform()->scale, 0, 255, true);
 		break;
 	case PlayerAnimationState::PLAYER_IDLE_UP:
 		TextureManager::Instance().PlayAnimation("spritesheet", GetAnimation("idleUp"),
-			x, y, 0.20f, GetTransform()->scale, 0, 255, false);
+			x, y, 0.20f, GetTransform()->scale, 0, 255, true);
 		break;
 	case PlayerAnimationState::PLAYER_IDLE_RIGHT:
 		TextureManager::Instance().PlayAnimation("spritesheet", GetAnimation("idleRight"),
-			x, y, 0.20f, GetTransform()->scale, 0, 255, false);
+			x, y, 0.20f, GetTransform()->scale, 0, 255, true);
 		break;
 	case PlayerAnimationState::PLAYER_RUN_RIGHT:
 		TextureManager::Instance().PlayAnimation("spritesheet", GetAnimation("runRight"),
-			x, y, 0.4f, GetTransform()->scale, 0, 255, false);
+			x, y, 0.4f, GetTransform()->scale, 0, 255, true);
 		break;
 	case PlayerAnimationState::PLAYER_RUN_DOWN:
 		TextureManager::Instance().PlayAnimation("spritesheet", GetAnimation("runDown"),
-			x, y, 0.40f, GetTransform()->scale, 0, 255, false);
+			x, y, 0.40f, GetTransform()->scale, 0, 255, true);
 		break;
 	case PlayerAnimationState::PLAYER_RUN_LEFT:
 		TextureManager::Instance().PlayAnimation("spritesheet", GetAnimation("runLeft"),
-			x, y, 0.40f, GetTransform()->scale, 0, 255, false);
+			x, y, 0.40f, GetTransform()->scale, 0, 255, true);
 		break;
 	case PlayerAnimationState::PLAYER_RUN_UP:
 		TextureManager::Instance().PlayAnimation("spritesheet", GetAnimation("runUp"),
-			x, y, 0.4f, GetTransform()->scale, 0, 255, false);
+			x, y, 0.4f, GetTransform()->scale, 0, 255, true);
 		break;
-	default:
+	case PlayerAnimationState::PLAYER_SWING_RIGHT:
+		TextureManager::Instance().PlayAnimation("spritesheet", GetAnimation("attackRight"),
+				x, y, 0.4f, GetTransform()->scale, 0, 255, true);
+		if (++m_attackAnimTimer % 15 == 0)
+		{
+			m_attackAnimTimer = 0;
+			m_isPlayerAttacking = false;
+			GetAnimation("attackRight").current_frame = 0;
+			GetParent()->RemoveChild(m_pHitBox);
+			if(m_isPlayerMoving)
+			{
+				SetAnimationState(PlayerAnimationState::PLAYER_RUN_RIGHT);
+			}else
+			{
+				SetAnimationState(PlayerAnimationState::PLAYER_IDLE_RIGHT);
+			}
+			
+		}
+		break;
+	case PlayerAnimationState::PLAYER_SWING_UP:
+		TextureManager::Instance().PlayAnimation("spritesheet", GetAnimation("attackUp"),
+		                                         x, y, 0.4f, GetTransform()->scale, 0, 255, true);
+		if (++m_attackAnimTimer % 15 == 0)
+		{
+			m_attackAnimTimer = 0;
+			m_isPlayerAttacking = false;
+			GetAnimation("attackUp").current_frame = 0;
+			GetParent()->RemoveChild(m_pHitBox);
+			m_pHealthBar->SetEnabled(true);
+			if (m_isPlayerMoving)
+			{
+				SetAnimationState(PlayerAnimationState::PLAYER_RUN_UP);
+			}
+			else
+			{
+				SetAnimationState(PlayerAnimationState::PLAYER_IDLE_UP);
+			}
+		}
+		break;
+	case PlayerAnimationState::PLAYER_SWING_LEFT:
+		TextureManager::Instance().PlayAnimation("spritesheet", GetAnimation("attackLeft"),
+		                                         x, y, 0.4f, GetTransform()->scale, 0, 255, true);
+		if (++m_attackAnimTimer % 15 == 0)
+		{
+			m_attackAnimTimer = 0;
+			m_isPlayerAttacking = false;
+			GetAnimation("attackLeft").current_frame = 0;
+			GetParent()->RemoveChild(m_pHitBox);
+			if (m_isPlayerMoving)
+			{
+				SetAnimationState(PlayerAnimationState::PLAYER_RUN_LEFT);
+			}
+			else
+			{
+				SetAnimationState(PlayerAnimationState::PLAYER_IDLE_LEFT);
+			}
+		}
+		break;
+	case PlayerAnimationState::PLAYER_SWING_DOWN:
+		TextureManager::Instance().PlayAnimation("spritesheet", GetAnimation("attackDown"),
+		                                         x, y, 0.4f, GetTransform()->scale, 0, 255, true);
+		if (++m_attackAnimTimer % 15 == 0)
+		{
+			m_attackAnimTimer = 0;
+			m_isPlayerAttacking = false;
+			GetAnimation("attackDown").current_frame = 0;
+			GetParent()->RemoveChild(m_pHitBox);
+			if (m_isPlayerMoving)
+			{
+				SetAnimationState(PlayerAnimationState::PLAYER_RUN_DOWN);
+			}
+			else
+			{
+				SetAnimationState(PlayerAnimationState::PLAYER_IDLE_DOWN);
+			}
+		}
 		break;
 	}
 
@@ -102,7 +177,13 @@ void Player::Update()
 	GetTransform()->position += GetRigidBody()->velocity;
 
 	// Health Bar Movement
-	m_pHealthBar->GetTransform()->position = GetTransform()->position - glm::vec2(6.0f, 20.0f);
+	m_pHealthBar->GetTransform()->position = GetTransform()->position - glm::vec2(40.0f, 45.0f);
+
+	// Hitbox movement
+	if (m_isPlayerAttacking)
+	{
+		m_pHitBox->GetTransform()->position += GetRigidBody()->velocity;
+	}
 }
 
 void Player::Clean()
@@ -135,16 +216,62 @@ bool Player::GetMovement()
 	return m_isPlayerMoving;
 }
 
+bool Player::GetAttacking()
+{
+	return m_isPlayerAttacking;
+}
+
 void Player::InitHPBar()
 {
 	// Initialize health bar
-	m_pHealthBar = new HealthBar(GetTransform()->position - glm::vec2(0.0f, 20.0f));
+	m_pHealthBar = new HealthBar(GetTransform()->position);
 	GetParent()->AddChild(m_pHealthBar);
 }
 
 HealthBar* Player::GetHPBar()
 {
 	return m_pHealthBar;
+}
+
+void Player::Attack()
+{
+	m_isPlayerAttacking = true;
+	switch(m_currentDirection)
+	{
+	case PlayerDirection::LEFT:
+		SetAnimationState(PlayerAnimationState::PLAYER_SWING_LEFT);
+		m_pHitBox = new InteractionObject(GetWidth(), GetHeight());
+		m_pHitBox->GetTransform()->position = 
+			glm::vec2(GetTransform()->position.x - GetWidth() - GetWidth() / 2, 
+				GetTransform()->position.y - GetHeight() / 2);
+		GetParent()->AddChild(m_pHitBox);
+		break;
+	case PlayerDirection::RIGHT:
+		SetAnimationState(PlayerAnimationState::PLAYER_SWING_RIGHT);
+		m_pHitBox = new InteractionObject(GetWidth(), GetHeight());
+		m_pHitBox->GetTransform()->position =
+			glm::vec2(GetTransform()->position.x + GetWidth() - GetWidth() / 2, 
+				GetTransform()->position.y - GetHeight() / 2);
+		GetParent()->AddChild(m_pHitBox);
+		break;
+	case PlayerDirection::UP:
+		SetAnimationState(PlayerAnimationState::PLAYER_SWING_UP);
+		m_pHitBox = new InteractionObject(GetHeight(), GetWidth());
+		m_pHitBox->GetTransform()->position =
+			glm::vec2(GetTransform()->position.x - GetWidth() / 2, 
+				GetTransform()->position.y - GetHeight());
+		GetParent()->AddChild(m_pHitBox);
+		m_pHealthBar->SetEnabled(false);
+		break;
+	case PlayerDirection::DOWN:
+		SetAnimationState(PlayerAnimationState::PLAYER_SWING_DOWN);
+		m_pHitBox = new InteractionObject(GetHeight(), GetWidth());
+		m_pHitBox->GetTransform()->position =
+			glm::vec2(GetTransform()->position.x - GetWidth() / 2, 
+				GetTransform()->position.y + GetHeight() - GetHeight() / 2);
+		GetParent()->AddChild(m_pHitBox);
+		break;
+	}
 }
 
 void Player::BuildAnimations()
@@ -210,4 +337,37 @@ void Player::BuildAnimations()
 	runDown_animation.frames.push_back(GetSpriteSheet()->GetFrame("player-down-3"));
 	runDown_animation.frames.push_back(GetSpriteSheet()->GetFrame("player-down-4"));
 	SetAnimation(runDown_animation);
+
+	auto attackRight_animation = Animation();
+	attackRight_animation.name = "attackRight";
+	attackRight_animation.frames.push_back(GetSpriteSheet()->GetFrame("attack-right-0"));
+	attackRight_animation.frames.push_back(GetSpriteSheet()->GetFrame("attack-right-1"));
+	attackRight_animation.frames.push_back(GetSpriteSheet()->GetFrame("attack-right-2"));
+	attackRight_animation.frames.push_back(GetSpriteSheet()->GetFrame("attack-right-3"));
+	SetAnimation(attackRight_animation);
+
+	auto attackUp_animation = Animation();
+	attackUp_animation.name = "attackUp";
+	attackUp_animation.frames.push_back(GetSpriteSheet()->GetFrame("attack-up-0"));
+	attackUp_animation.frames.push_back(GetSpriteSheet()->GetFrame("attack-up-1"));
+	attackUp_animation.frames.push_back(GetSpriteSheet()->GetFrame("attack-up-2"));
+	attackUp_animation.frames.push_back(GetSpriteSheet()->GetFrame("attack-up-3"));
+	SetAnimation(attackUp_animation);
+
+	auto attackLeft_animation = Animation();
+	attackLeft_animation.name = "attackLeft";
+	attackLeft_animation.frames.push_back(GetSpriteSheet()->GetFrame("attack-left-0"));
+	attackLeft_animation.frames.push_back(GetSpriteSheet()->GetFrame("attack-left-1"));
+	attackLeft_animation.frames.push_back(GetSpriteSheet()->GetFrame("attack-left-2"));
+	attackLeft_animation.frames.push_back(GetSpriteSheet()->GetFrame("attack-left-3"));
+	SetAnimation(attackLeft_animation);
+
+	auto attackDown_animation = Animation();
+	attackDown_animation.name = "attackDown";
+	attackDown_animation.frames.push_back(GetSpriteSheet()->GetFrame("attack-down-0"));
+	attackDown_animation.frames.push_back(GetSpriteSheet()->GetFrame("attack-down-1"));
+	attackDown_animation.frames.push_back(GetSpriteSheet()->GetFrame("attack-down-2"));
+	attackDown_animation.frames.push_back(GetSpriteSheet()->GetFrame("attack-down-3"));
+	SetAnimation(attackDown_animation);
+	
 }

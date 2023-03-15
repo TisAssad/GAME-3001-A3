@@ -24,7 +24,7 @@ void TemplateScene::Draw()
 		SDL_SetRenderDrawColor(Renderer::Instance().GetRenderer(), 0, 255, 0, 255);
 		for (const auto display_object : GetDisplayList())
 		{
-			if (display_object->GetType() == GameObjectType::TEXT_BOX)
+			if (display_object->GetType() == GameObjectType::TEXT_BOX || display_object->GetType() == GameObjectType::PLAYER)
 			{
 				continue;
 			}
@@ -32,12 +32,13 @@ void TemplateScene::Draw()
 				display_object->GetTransform()->position.y),
 				display_object->GetWidth(), display_object->GetHeight());
 		}
+		Util::DrawRect({ m_pPlayer->GetTransform()->position.x - m_pPlayer->GetWidth() / 2,
+			m_pPlayer->GetTransform()->position.y - m_pPlayer->GetHeight() / 2 },
+			m_pPlayer->GetWidth(), m_pPlayer->GetHeight());
 	}
 	TextureManager::Instance().Draw("ForestBG", 0, 0);
 	DrawDisplayList();
-
-	//SDL_SetRenderDrawColor(Renderer::Instance().GetRenderer(), 255, 255, 255, 255);
-
+	SDL_SetRenderDrawColor(Renderer::Instance().GetRenderer(), 0, 0, 0, 255);
 }
 
 void TemplateScene::Update()
@@ -88,7 +89,6 @@ void TemplateScene::Clean()
 void TemplateScene::HandleEvents()
 {
 	EventManager::Instance().Update();
-
 	if (m_pPlayer->GetTransform()->position.x > 800)
 	{
 		m_pPlayer->GetTransform()->position = glm::vec2(400.0f, 400.0f);
@@ -114,7 +114,7 @@ void TemplateScene::HandleEvents()
 	//std::cout << m_left << m_right << m_up << m_down << std::endl;
 
 	// handle player movement if no Game Controllers found & there is no text box on screen
-	if (SDL_NumJoysticks() < 1 && !m_textBoxOnScreen) 
+	if (SDL_NumJoysticks() < 1 && !m_textBoxOnScreen && !m_pPlayer->GetAttacking()) 
 	{
 		// movement, can be simply copied over between all scenes
 		if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_A))
@@ -202,46 +202,7 @@ void TemplateScene::HandleEvents()
 	// without this the text boxes won't work
 	if(EventManager::Instance().KeyPressed(SDL_SCANCODE_SPACE))
 	{
-		if (!m_textBoxOnScreen) { // If there isn't a text box
-			if(m_pIO->ObjectInteration(m_pPlayer)) // interaction object, the door
-			{
-				if (InventoryManager::Instance().GetInventory("bedroommaster"))
-				{
-					GetTextBox("The door to the hallway", glm::vec2{ 0, 680 }, 5);
-					m_changeState = true;
-				}
-				else {
-					GetTextBox("The door is locked", glm::vec2{ 0, 680 }, 5);
-					if (InventoryManager::Instance().GetInventory("bedroomkey")) // if the player has the key
-					{
-						GetTextBox("You use the key to unlock the door", glm::vec2{ 0, 680 }, 4);
-						m_changeState = true; // change state
-						InventoryManager::Instance().SetInventory("bedroomkey", false);
-						InventoryManager::Instance().SetInventory("bedroommaster", true);
-					}
-				}
-				m_textBoxOnScreen = true; 
-			}
-		}
-		else if(GetDisplayList().size() != m_childrenWithoutTB) // if there is a text box on screen
-		{
-			// Removing 2 children, the text and the box
-			RemoveChild(GetDisplayList().back());
-			RemoveChild(GetDisplayList().back());
-			if(GetDisplayList().size() == m_childrenWithoutTB) // if there isn't a text box
-			{
-				m_textBoxOnScreen = false; // reset the if statement
-				if (m_changeState) // if we are changing state
-				{
-					Game::Instance().ChangeSceneState(SceneState::HALLWAY); // this can be any state, ensure there is a case for it though
-				}
-
-			}
-		}
-		else // default
-		{
-			std::cout << "Not within an interaction radius" << std::endl;
-		}
+		m_pPlayer->Attack();
 	}
 
 	if(EventManager::Instance().MousePressed(1))
