@@ -27,9 +27,12 @@ public:
 	// getters
 	PlayerDirection GetPlayerDirection();
 	bool GetMovement();
+	bool GetAttacking();
 
 	void InitHPBar();
 	HealthBar* GetHPBar();
+
+	void Attack();
 
 private:
 	void BuildAnimations();
@@ -38,6 +41,8 @@ private:
 	PlayerDirection m_currentDirection;
 	HealthBar* m_pHealthBar;
 	bool m_isPlayerMoving = false;
+	bool m_isPlayerAttacking = false;
+	int m_attackAnimTimer;
 
 };
 

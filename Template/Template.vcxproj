@@ -267,6 +267,9 @@
   <ItemGroup>
     <Image Include="..\Assets\sprites\player.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\Assets\sprites\player.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
