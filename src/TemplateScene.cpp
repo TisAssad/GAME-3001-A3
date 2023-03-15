@@ -11,6 +11,7 @@
 
 TemplateScene::TemplateScene()
 {
+
 	TemplateScene::Start();
 }
 
@@ -32,10 +33,11 @@ void TemplateScene::Draw()
 				display_object->GetWidth(), display_object->GetHeight());
 		}
 	}
-
+	TextureManager::Instance().Draw("ForestBG", 0, 0);
 	DrawDisplayList();
 
-	SDL_SetRenderDrawColor(Renderer::Instance().GetRenderer(), 255, 255, 255, 255);
+	//SDL_SetRenderDrawColor(Renderer::Instance().GetRenderer(), 255, 255, 255, 255);
+
 }
 
 void TemplateScene::Update()
@@ -257,14 +259,16 @@ void TemplateScene::Start()
 	// Always draw background first
 
 	TextureManager::Instance().Load("../Assets/textures/backgrounds/bedroom.png", "bedroom");
-
+	TextureManager::Instance().Load("../Assets/textures/backgrounds/ForestBG.png", "ForestBG");
 	// an interaction object
 	// a simple object with no texture, and is only used for interaction
 	m_pIO = new InteractionObject(100, 100);
 	AddChild(m_pIO, 0);
 	m_pIO->GetTransform()->position = glm::vec2(400, 700);
+	
 
 	// Player Sprite
+
 	m_pPlayer = new Player();
 	AddChild(m_pPlayer, 1);
 	m_pPlayer->SetPlayerDirection(PlayerDirection::DOWN);
