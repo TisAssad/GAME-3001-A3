@@ -18,6 +18,7 @@ enum class GameObjectType {
 	INTERACTION_OBJECT,
 	TEXT_BOX,
 	HITBOX,
+	HEALTH_BAR,
 	NUM_OF_TYPES,
 	BACKGROUND
 };

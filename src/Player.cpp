@@ -196,7 +196,7 @@ void Player::Update()
 	}
 
 	// Hitbox movement
-	if (m_isPlayerAttacking)
+	if (m_isPlayerAttacking && m_melee)
 	{
 		m_pHitBox->GetTransform()->position += GetRigidBody()->velocity;
 	}
@@ -298,10 +298,10 @@ void Player::Attack(bool melee)
 		case PlayerDirection::UP:
 			SetAnimationState(PlayerAnimationState::PLAYER_SWING_UP);
 			if (m_melee) {
-				m_pHitBox = new InteractionObject(GetHeight(), GetWidth());
+				m_pHitBox = new InteractionObject(GetHeight() + 20, GetWidth());
 				m_pHitBox->GetTransform()->position =
-					glm::vec2(GetTransform()->position.x - GetWidth() / 2,
-						GetTransform()->position.y - GetHeight());
+					glm::vec2(GetTransform()->position.x - GetWidth() / 2 - 15,
+						GetTransform()->position.y - GetHeight() + 10);
 				GetParent()->AddChild(m_pHitBox);
 			}
 			else {
@@ -313,10 +313,10 @@ void Player::Attack(bool melee)
 		case PlayerDirection::DOWN:
 			SetAnimationState(PlayerAnimationState::PLAYER_SWING_DOWN);
 			if (m_melee) {
-				m_pHitBox = new InteractionObject(GetHeight(), GetWidth());
+				m_pHitBox = new InteractionObject(GetHeight() + 20, GetWidth() + 5);
 				m_pHitBox->GetTransform()->position =
-					glm::vec2(GetTransform()->position.x - GetWidth() / 2,
-						GetTransform()->position.y + GetHeight() - GetHeight() / 2);
+					glm::vec2(GetTransform()->position.x - GetWidth() / 2 - 10 ,
+						GetTransform()->position.y + GetHeight() - GetHeight() / 2 - 10);
 				GetParent()->AddChild(m_pHitBox);
 			}
 			else {

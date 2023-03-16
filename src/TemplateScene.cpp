@@ -25,7 +25,9 @@ void TemplateScene::Draw()
 		SDL_SetRenderDrawColor(Renderer::Instance().GetRenderer(), 0, 255, 0, 255);
 		for (const auto display_object : GetDisplayList())
 		{
-			if (display_object->GetType() == GameObjectType::TEXT_BOX || display_object->GetType() == GameObjectType::PLAYER)
+			if (display_object->GetType() == GameObjectType::TEXT_BOX 
+				|| display_object->GetType() == GameObjectType::HEALTH_BAR
+				|| display_object->GetType() == GameObjectType::PLAYER)
 			{
 				continue;
 			}

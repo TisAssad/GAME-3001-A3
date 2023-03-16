@@ -11,7 +11,7 @@ HealthBar::HealthBar(const glm::vec2 position)
 	GetTransform()->position = position;
 	SetWidth(76);
 	SetHeight(20);
-	SetType(GameObjectType::BACKGROUND);
+	SetType(GameObjectType::HEALTH_BAR);
 	GetRigidBody()->isColliding = false;
 	m_health = 66.0;
 	

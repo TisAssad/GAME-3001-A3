@@ -53,7 +53,7 @@ void StartScene::Start()
 
 	// Music
 	SoundManager::Instance().Load("../Assets/audio/theme.mp3", "titleTheme", SoundType::SOUND_MUSIC);
-	SoundManager::Instance().PlayMusic("titleTheme");
+	//SoundManager::Instance().PlayMusic("titleTheme");
 	SoundManager::Instance().SetMusicVolume(40);
 
 	// Start Button
