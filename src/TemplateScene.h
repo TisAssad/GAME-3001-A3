@@ -7,6 +7,8 @@
 #include "Label.h"
 #include "Renderer.h"
 #include "InteractionObject.h"
+#include "LOSMode.h"
+#include "PathNode.h"
 
 class TemplateScene : public Scene
 {
@@ -21,10 +23,18 @@ public:
 	virtual void HandleEvents() override;
 	virtual void Start() override;
 
-	/*void TextBox(const std::string& text, const std::string& font_name, const int font_size, 
-		const SDL_Color colour, const glm::vec2 position, const int font_style, const bool is_centered);
+	// Create our Division Scheme (Grid of PathNodes)
+	std::vector<PathNode*> m_pGrid;
+	void m_buildGrid();
+	void m_toggleGrid(bool state) const;
+	void m_clearNodes();
 
-	void GetTextBox(std::string& info);*/
+	// LOS functions
+	bool m_checkAgentLOS(Agent* agent, DisplayObject* target_object) const;
+	bool m_checkPathNodeLOS(PathNode* path_node, DisplayObject* target_object) const;
+	void m_checkAllNodesWithTarget(DisplayObject* target_object) const;
+	void m_checkAllNodesWithBoth() const;
+	void m_setPathNodeDistance(int distance) const;
 
 private:
 	// IMGUI Function
@@ -45,6 +55,11 @@ private:
 	bool m_changeState = false;
 	int m_childrenWithoutTB;
 	std::string m_textBoxText;
+
+	// Los variables
+	LOSMode m_LOSMode{};
+	int m_pathNodeLOSDistance;
+	bool m_isGridEnabled;
 };
 
 #endif /* defined (__PLAY_SCENE__) */

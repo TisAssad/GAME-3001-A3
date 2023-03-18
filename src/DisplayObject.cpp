@@ -37,7 +37,7 @@ void DisplayObject::SetLayerIndex(const uint32_t new_index, const uint32_t new_o
 
 bool DisplayObject::ObjectInteration(DisplayObject* object)
 {
-	if(CollisionManager::RadiusCheck(this, object))
+	if(CollisionManager::AABBRadiusCheck(this, object, 5))
 	{
 		return true;
 	}

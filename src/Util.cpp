@@ -309,7 +309,7 @@ void Util::DrawRect(const glm::vec2 position, const int width, const int height,
 
 	SDL_SetRenderDrawColor(renderer, r, g, b, a);
 	SDL_RenderDrawRectF(renderer, &rectangle);
-	//SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 }
 
 void Util::DrawFilledRect(const glm::vec2 position, const int width, const int height, const glm::vec4 fill_colour, SDL_Renderer* renderer)
@@ -322,9 +322,9 @@ void Util::DrawFilledRect(const glm::vec2 position, const int width, const int h
 	rectangle.w = static_cast<float>(width);
 	rectangle.h = static_cast<float>(height);
 
-	SDL_SetRenderDrawColor(renderer, fill_colour.r, fill_colour.g, fill_colour.b, fill_colour.a);
+	SDL_SetRenderDrawColor(renderer, r, g, b, a);
 	SDL_RenderFillRectF(renderer, &rectangle);
-	//SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 }
 
 void Util::DrawCircle(const glm::vec2 centre, const float radius, const glm::vec4 colour, const ShapeType type, SDL_Renderer* renderer)
@@ -464,7 +464,7 @@ SDL_Color Util::ToSDLColour(const glm::vec4 colour)
 	return color;
 }
 
-glm::vec2 Util::RotatePoint(glm::vec2 point, float angle, glm::vec2 pivot)
+glm::vec2 Util::RotatePoint(glm::vec2 point, const float angle, const glm::vec2 pivot)
 {
 	const float s = sin(angle * Deg2Rad);
 	const float c = cos(angle * Deg2Rad);

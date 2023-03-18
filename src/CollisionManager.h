@@ -6,9 +6,10 @@
 #include <iostream>
 
 #include "GameObject.h"
+#include "Agent.h"
 #include <glm/gtx/norm.hpp>
 #include "SoundManager.h"
-#include "Agent.h"
+
 class CollisionManager
 {
 public:
@@ -16,13 +17,13 @@ public:
 	static bool SquaredRadiusCheck(GameObject* object1, GameObject* object2);
 
 	static bool AABBCheck(GameObject* object1, GameObject* object2);
-	static bool RadiusCheck(GameObject* object1, GameObject* object2);
+	static bool AABBRadiusCheck(GameObject* object1, GameObject* object2, float radius);
 
 	static bool LineLineCheck(glm::vec2 line1_start, glm::vec2 line1_end, glm::vec2 line2_start, glm::vec2 line2_end);
 
 	static bool LineRectCheck(glm::vec2 line_start, glm::vec2 line_end, glm::vec2 rect_start, float rect_width, float rect_height);
+	static bool LineRectCheckPlusRadius(glm::vec2 line_start, glm::vec2 line_end, glm::vec2 rect_start, float rect_width, float rect_height, int radius);
 	static bool LineRectEdgeCheck(glm::vec2 line_start, glm::vec2 rect_start, float rect_width, float rect_height);
-
 
 	static int MinSquaredDistanceLineLine(glm::vec2 line1_start, glm::vec2 line1_end, glm::vec2 line2_start, glm::vec2 line2_end);
 	static bool LineAABBCheck(Agent* object1, GameObject* object2);
@@ -34,8 +35,7 @@ public:
 
 	static bool LOSCheck(Agent* agent, glm::vec2 end_point, const std::vector<DisplayObject*>& objects, DisplayObject* target);
 
-	static void RotateAABB(GameObject* object1, const float angle);
-
+	static void RotateAABB(GameObject* object1, float angle);
 
 private:
 	CollisionManager();

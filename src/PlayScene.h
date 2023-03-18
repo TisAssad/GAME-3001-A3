@@ -1,36 +1,75 @@
-#pragma once
-#ifndef __PLAY_SCENE__
-#define __PLAY_SCENE__
-
-#include "Scene.h"
-#include "Player.h"
-
-
-class PlayScene : public Scene
-{
-public:
-	PlayScene();
-	~PlayScene() override;
-
-	// Scene LifeCycle Functions
-	virtual void Draw() override;
-	virtual void Update() override;
-	virtual void Clean() override;
-	virtual void HandleEvents() override;
-	virtual void Start() override;
-private:
-	// IMGUI Function
-	void GUI_Function() const;
-	std::string m_guiTitle;
-	
-	glm::vec2 m_mousePosition;
-
-	Player* m_pPlayer;
-	mutable bool m_playerFacingRight;        // bools here are mutable, so that they can be used within the GUI_Function
-	mutable bool m_isPlayerMoving = false;   // The other option is to make the GUI_Function not const, though I don't know if that would cause any unforseen problems
-
-	// UI Items
-
-};
-
-#endif /* defined (__PLAY_SCENE__) */
+//#pragma once
+//#ifndef __PLAY_SCENE__
+//#define __PLAY_SCENE__
+//
+//#include "LOSMode.h"
+//#include "Obstacle.h"
+//#include "Scene.h"
+//#include "Target.h"
+//#include "StarShip.h"
+//#include "PathNode.h"
+//
+//
+//class PlayScene : public Scene
+//{
+//public:
+//	PlayScene();
+//	~PlayScene() override;
+//
+//	// Scene LifeCycle Functions
+//	virtual void Draw() override;
+//	virtual void Update() override;
+//	virtual void Clean() override;
+//	virtual void HandleEvents() override;
+//	virtual void Start() override;
+//private:
+//	// IMGUI Function
+//	void GUI_Function();
+//	std::string m_guiTitle;
+//	glm::vec2 m_mousePosition;
+//	bool m_isGridEnabled;
+//
+//	// Game Objects for the Scene
+//	Target* m_pTarget;
+//	StarShip* m_pStarShip;
+//	std::vector<Obstacle*> m_pObstacles;
+//
+//	void BuildObstaclePool();
+//
+//	// Create our Division Scheme (Grid of PathNodes)
+//	std::vector<PathNode*> m_pGrid;
+//	void m_buildGrid();
+//	void m_toggleGrid(bool state) const;
+//	void m_clearNodes();
+//
+//	// LOS functions
+//	bool m_checkAgentLOS(Agent* agent, DisplayObject* target_object) const;
+//	bool m_checkPathNodeLOS(PathNode* path_node, DisplayObject* target_object) const;
+//	void m_checkAllNodesWithTarget(DisplayObject* target_object) const;
+//	void m_checkAllNodesWithBoth() const;
+//	void m_setPathNodeDistance(int distance) const;
+//
+//	// Pathfinding Functions
+//	void ResetPathFinding();
+//	void SetLOSNodes();
+//	void FindPath(std::vector<PathNode*> startingNodes, std::vector<PathNode*> targetNodes, DisplayObject* startingPoint);
+//
+//	// Los variables
+//	LOSMode m_LOSMode{};
+//	int m_pathNodeLOSDistance;
+//
+//	// Debugging Variables
+//	bool m_bDebugView;
+//
+//	// Pathfinding variables
+//	std::vector<PathNode*> m_pNodesWithShipLOS;
+//	std::vector<PathNode*> m_pNodesWithTargetLOS;
+//	std::vector<PathNode*> m_pNodesWithBothLOS;
+//	std::vector<PathNode*> m_pPathNodes;
+//	mutable bool m_pathFound, m_directPathFound;
+//
+//
+//
+//};
+//
+//#endif /* defined (__PLAY_SCENE__) */

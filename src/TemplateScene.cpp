@@ -27,7 +27,8 @@ void TemplateScene::Draw()
 		{
 			if (display_object->GetType() == GameObjectType::TEXT_BOX 
 				|| display_object->GetType() == GameObjectType::HEALTH_BAR
-				|| display_object->GetType() == GameObjectType::PLAYER)
+				|| display_object->GetType() == GameObjectType::PLAYER
+				|| display_object->GetType() == GameObjectType::PATH_NODE)
 			{
 				continue;
 			}
@@ -241,7 +242,7 @@ void TemplateScene::Start()
 	m_pPlayer->GetTransform()->position = glm::vec2(400,400);
 	m_pPlayer->InitHPBar();
 
-	
+	m_buildGrid();
 
 	m_childrenWithoutTB = GetDisplayList().size(); // need to incremented any time you add a new display object that isnt a textbox
 
@@ -271,6 +272,7 @@ void TemplateScene::GUI_Function()
 	if (ImGui::Checkbox("Toggle Debug View", &debug))
 	{
 		m_debugView = debug;
+		m_toggleGrid(debug);
 	}
 
 	float float2[2] = { m_pPlayer->GetTransform()->position.x, m_pPlayer->GetTransform()->position.y };
@@ -307,4 +309,136 @@ void TemplateScene::GUI_Function()
 		
 	}
 	ImGui::End();
+}
+
+void TemplateScene::m_buildGrid()
+{
+	constexpr auto tile_size = Config::TILE_SIZE;
+	constexpr auto offset = glm::vec2(Config::TILE_SIZE * 0.5f, Config::TILE_SIZE * 0.5f);
+
+	m_clearNodes(); // we will need to clear nodes because we will rebuild/redraw the grid if we move an obstacle
+
+	// lay out a grid of path_nodes
+	for (int row = 0; row < Config::ROW_NUM; ++row)
+	{
+		for (int col = 0; col < Config::COL_NUM; ++col)
+		{
+			PathNode* path_node = new PathNode();
+			path_node->GetTransform()->position = glm::vec2(static_cast<float>(col) * tile_size + offset.x,
+				static_cast<float>(row) * tile_size + offset.y);
+
+			// only show grid where there are no obstacles
+			bool keep_node = true;
+			//for (const auto obstacle : m_pObstacles)
+			//{
+			//	// determine which path_nodes to keep
+			//	if (CollisionManager::AABBRadiusCheck(path_node, obstacle, 20))
+			//	{
+			//		keep_node = false;
+			//	}
+			//}
+			if (keep_node)
+			{
+				AddChild(path_node);
+				m_pGrid.push_back(path_node);
+			}
+			else
+			{
+				delete path_node;
+			}
+		}
+
+		// if Grid is supposed to be hidden - make it so!
+		m_toggleGrid(m_isGridEnabled);
+	}
+}
+
+void TemplateScene::m_toggleGrid(const bool state) const
+{
+	for (const auto path_node : m_pGrid)
+	{
+		path_node->SetVisible(state);
+	}
+}
+
+void TemplateScene::m_clearNodes()
+{
+	m_pGrid.clear();
+	for (const auto display_object : GetDisplayList())
+	{
+		if (display_object->GetType() == GameObjectType::PATH_NODE)
+		{
+			RemoveChild(display_object);
+		}
+	}
+}
+
+bool TemplateScene::m_checkAgentLOS(Agent* agent, DisplayObject* target_object) const
+{
+	bool has_LOS = false;
+	agent->SetHasLOS(has_LOS); // default - no LOS
+	const glm::vec2 agent_LOS_endPoint = agent->GetTransform()->position + agent->GetCurrentDirection() * agent->GetLOSDistance();
+
+	// if ship to target distance is less than or equal to the LOS Distance (Range)
+	const auto agent_to_range = Util::GetClosestEdge(agent->GetTransform()->position, target_object);
+	if (agent_to_range <= agent->GetLOSDistance())
+	{
+		// we are in range
+		std::vector<DisplayObject*> contact_list;
+		for (auto display_object : GetDisplayList())
+		{
+			const auto agent_to_object_distance = Util::GetClosestEdge(agent->GetTransform()->position, display_object);
+			if (agent_to_object_distance > agent_to_range) { continue; }
+
+			if ((display_object->GetType() != GameObjectType::AGENT)
+				&& (display_object->GetType() != GameObjectType::PATH_NODE)
+				&& display_object->GetType() != GameObjectType::TARGET)
+			{
+				contact_list.push_back(display_object);
+			}
+		}
+
+		has_LOS = CollisionManager::LOSCheck(agent, agent_LOS_endPoint, contact_list, target_object);
+
+		const auto LOSColour = (target_object->GetType() == GameObjectType::AGENT)
+			? glm::vec4(0, 0, 1, 1)
+			: glm::vec4(0, 1, 0, 1);
+		agent->SetHasLOS(has_LOS, LOSColour);
+	}
+	return has_LOS;
+}
+
+bool TemplateScene::m_checkPathNodeLOS(PathNode* path_node, DisplayObject* target_object) const
+{
+	// check angle to target so we can still use LOS Distance for path_nodes
+	const auto target_direction = target_object->GetTransform()->position - path_node->GetTransform()->position;
+	const auto normalized_direction = Util::Normalize(target_direction); // normalizes target direction
+	path_node->SetCurrentDirection(normalized_direction);
+	return m_checkAgentLOS(path_node, target_object);
+}
+
+void TemplateScene::m_checkAllNodesWithTarget(DisplayObject* target_object) const
+{
+	for (const auto path_node : m_pGrid)
+	{
+		m_checkPathNodeLOS(path_node, target_object);
+	}
+}
+
+void TemplateScene::m_checkAllNodesWithBoth() const
+{
+	for (const auto path_node : m_pGrid)
+	{
+		const bool LOSWithStarship = m_checkPathNodeLOS(path_node, m_pPlayer);
+		//const bool LOSWithTarget = m_checkPathNodeLOS(path_node, m_pTarget);
+		path_node->SetHasLOS(LOSWithStarship /*&& LOSWithTarget*/, glm::vec4(0, 1, 1, 1));
+	}
+}
+
+void TemplateScene::m_setPathNodeDistance(const int distance) const
+{
+	for (const auto path_node : m_pGrid)
+	{
+		path_node->SetLOSDistance(static_cast<float>(distance));
+	}
 }
