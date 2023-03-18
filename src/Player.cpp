@@ -27,6 +27,7 @@ Player::Player() : m_currentAnimationState(PlayerAnimationState::PLAYER_IDLE_DOW
 	GetRigidBody()->acceleration = glm::vec2(0.0f, 0.0f);
 	GetRigidBody()->isColliding = false;
 	SetType(GameObjectType::PLAYER);
+	
 
 	BuildAnimations();
 }
@@ -218,7 +219,7 @@ void Player::Update()
 			m_pProjectileVec.shrink_to_fit();
 		}
 	}
-	std::cout << m_pProjectileVec.size() << std::endl;
+	std::cout << m_pHealthBar->IsEnabled() << std::endl;
 }
 
 void Player::Clean()
@@ -269,6 +270,7 @@ void Player::InitHPBar()
 	m_pAttackType = new Label("Default", "Consolas", 20, {255,255,255,255}
 	, GetTransform()->position);
 	GetParent()->AddChild(m_pAttackType);
+	m_pHealthBar->SetEnabled(true);
 }
 
 HealthBar* Player::GetHPBar() const

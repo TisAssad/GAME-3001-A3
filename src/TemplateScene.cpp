@@ -242,7 +242,7 @@ void TemplateScene::Start()
 	m_pPlayer->GetTransform()->position = glm::vec2(400,400);
 	m_pPlayer->InitHPBar();
 
-	m_buildGrid();
+	//m_buildGrid();
 
 	m_childrenWithoutTB = GetDisplayList().size(); // need to incremented any time you add a new display object that isnt a textbox
 

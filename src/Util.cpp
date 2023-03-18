@@ -314,7 +314,7 @@ void Util::DrawRect(const glm::vec2 position, const int width, const int height,
 
 void Util::DrawFilledRect(const glm::vec2 position, const int width, const int height, const glm::vec4 fill_colour, SDL_Renderer* renderer)
 {
-	const auto [r, g, b, a] = ToSDLColour(fill_colour);
+	//const auto [r, g, b, a] = ToSDLColour(fill_colour);
 
 	SDL_FRect rectangle{};
 	rectangle.x = position.x;
@@ -322,7 +322,7 @@ void Util::DrawFilledRect(const glm::vec2 position, const int width, const int h
 	rectangle.w = static_cast<float>(width);
 	rectangle.h = static_cast<float>(height);
 
-	SDL_SetRenderDrawColor(renderer, r, g, b, a);
+	SDL_SetRenderDrawColor(renderer, fill_colour.r, fill_colour.g, fill_colour.b, fill_colour.a);
 	SDL_RenderFillRectF(renderer, &rectangle);
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 }
