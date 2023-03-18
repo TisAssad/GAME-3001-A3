@@ -34,7 +34,7 @@ public:
 	bool GetAttacking();
 
 	void InitHPBar();
-	HealthBar* GetHPBar();
+	HealthBar* GetHPBar() const;
 
 	void Attack(bool melee = true);
 
@@ -47,7 +47,7 @@ private:
 	InteractionObject* m_pHitBox{};
 	Label* m_pAttackType{};
 
-	std::vector<Projectile*> m_projectileVec;
+	std::vector<Projectile*> m_pProjectileVec;
 
 	bool m_isPlayerMoving = false;
 	bool m_isPlayerAttacking = false;

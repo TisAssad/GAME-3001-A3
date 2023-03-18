@@ -48,9 +48,9 @@ void TemplateScene::Update()
 {
 	// Wall collision
 	bool wallCollsion = false;
-	if(m_pPlayer->GetTransform()->position.x < 100 || m_pPlayer->GetTransform()->position.x > 700 - 32
-		|| m_pPlayer->GetTransform()->position.y < 265 
-		|| m_pPlayer->GetTransform()->position.y > 725 - m_pPlayer->GetHeight())
+	if(m_pPlayer->GetTransform()->position.x < 0 + m_pPlayer->GetWidth() / 2 || m_pPlayer->GetTransform()->position.x > 800 - m_pPlayer->GetWidth()/2
+		|| m_pPlayer->GetTransform()->position.y < 0 + m_pPlayer->GetHeight() / 2
+		|| m_pPlayer->GetTransform()->position.y > 800 - m_pPlayer->GetHeight()/2)
 	{
 		wallCollsion = true;
 	}
@@ -58,6 +58,8 @@ void TemplateScene::Update()
 	// object collision
 	// basic aabb checks between the player and all gameobjects
 	// can be optimized
+
+	m_pPlayer->GetRigidBody()->isColliding = wallCollsion;
 
 	if(m_pPlayer->GetRigidBody()->isColliding)
 	{
@@ -81,6 +83,7 @@ void TemplateScene::Update()
 			break;
 		}
 	}
+
 	UpdateDisplayList();
 }
 

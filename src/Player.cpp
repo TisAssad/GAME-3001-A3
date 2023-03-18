@@ -32,7 +32,13 @@ Player::Player() : m_currentAnimationState(PlayerAnimationState::PLAYER_IDLE_DOW
 }
 
 Player::~Player()
-= default;
+{
+	/*for (auto bullet : m_pProjectileVec)
+	{
+		delete bullet;
+	}
+	m_pProjectileVec.clear();*/
+}
 
 void Player::Draw()
 {
@@ -200,6 +206,19 @@ void Player::Update()
 	{
 		m_pHitBox->GetTransform()->position += GetRigidBody()->velocity;
 	}
+
+	for(int i = 0; i < m_pProjectileVec.size(); i++)
+	{
+		if (m_pProjectileVec[i]->GetTransform()->position.x < 0 || m_pProjectileVec[i]->GetTransform()->position.x > 800
+			|| m_pProjectileVec[i]->GetTransform()->position.y < 0
+			|| m_pProjectileVec[i]->GetTransform()->position.y > 800 || !m_pProjectileVec[i]->IsEnabled())
+		{
+			GetParent()->RemoveChild(m_pProjectileVec[i]);
+			m_pProjectileVec.erase(m_pProjectileVec.begin() + i);
+			m_pProjectileVec.shrink_to_fit();
+		}
+	}
+	std::cout << m_pProjectileVec.size() << std::endl;
 }
 
 void Player::Clean()
@@ -252,7 +271,7 @@ void Player::InitHPBar()
 	GetParent()->AddChild(m_pAttackType);
 }
 
-HealthBar* Player::GetHPBar()
+HealthBar* Player::GetHPBar() const
 {
 	return m_pHealthBar;
 }
@@ -276,8 +295,8 @@ void Player::Attack(bool melee)
 				GetParent()->AddChild(m_pHitBox);
 			}
 			else {
-				m_projectileVec.push_back(new Projectile(true, GetTransform()->position, 180));
-				GetParent()->AddChild(m_projectileVec.back());
+				m_pProjectileVec.push_back(new Projectile(true, GetTransform()->position, 180));
+				GetParent()->AddChild(m_pProjectileVec.back());
 			}
 			break;
 		case PlayerDirection::RIGHT:
@@ -291,8 +310,8 @@ void Player::Attack(bool melee)
 				GetParent()->AddChild(m_pHitBox);
 			}
 			else {
-				m_projectileVec.push_back(new Projectile(true, GetTransform()->position, 0));
-				GetParent()->AddChild(m_projectileVec.back());
+				m_pProjectileVec.push_back(new Projectile(true, GetTransform()->position, 0));
+				GetParent()->AddChild(m_pProjectileVec.back());
 			}
 			break;
 		case PlayerDirection::UP:
@@ -305,8 +324,8 @@ void Player::Attack(bool melee)
 				GetParent()->AddChild(m_pHitBox);
 			}
 			else {
-				m_projectileVec.push_back(new Projectile(true, GetTransform()->position, 270));
-				GetParent()->AddChild(m_projectileVec.back());
+				m_pProjectileVec.push_back(new Projectile(true, GetTransform()->position, 270));
+				GetParent()->AddChild(m_pProjectileVec.back());
 			}
 			m_pHealthBar->SetEnabled(false);
 			break;
@@ -320,8 +339,8 @@ void Player::Attack(bool melee)
 				GetParent()->AddChild(m_pHitBox);
 			}
 			else {
-				m_projectileVec.push_back(new Projectile(true, GetTransform()->position, 90));
-				GetParent()->AddChild(m_projectileVec.back());
+				m_pProjectileVec.push_back(new Projectile(true, GetTransform()->position, 90));
+				GetParent()->AddChild(m_pProjectileVec.back());
 			}
 			break;
 		}
