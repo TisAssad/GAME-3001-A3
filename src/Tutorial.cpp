@@ -48,21 +48,21 @@ void Tutorial::HandleEvents()
 
 void Tutorial::Start()
 {
-	const SDL_Color white = { 255, 255, 255, 255 };
+	const SDL_Color black = { 0, 0, 0, 255 };
 
 	m_pInstructionsLabel = new Label("To play use W, A, S, D ",
-		"Daydream", 20, white, glm::vec2(400.0f, 350.0f));
+		"Daydream", 20, black, glm::vec2(400.0f, 350.0f));
 	m_pInstructionsLabel->SetParent(this);
 	AddChild(m_pInstructionsLabel, 1);
 
 
-	m_pInstructionsLabel = new Label("And space to interact with objects",
-		"Daydream", 20, white, glm::vec2(400.0f, 400.0f));
+	m_pInstructionsLabel = new Label("And mouse buttons to attack",
+		"Daydream", 20, black, glm::vec2(400.0f, 400.0f));
 	m_pInstructionsLabel->SetParent(this);
 	AddChild(m_pInstructionsLabel, 1);
 
 	m_pInstructionsLabel = new Label("Press space to continue",
-		"Daydream", 20, white, glm::vec2(400.0f, 450.0f));
+		"Daydream", 20, black, glm::vec2(400.0f, 450.0f));
 	m_pInstructionsLabel->SetParent(this);
 	AddChild(m_pInstructionsLabel, 1);
 
