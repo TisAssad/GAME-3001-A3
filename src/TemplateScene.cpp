@@ -203,7 +203,8 @@ void TemplateScene::HandleEvents()
 		Game::Instance().ChangeSceneState(SceneState::END);
 	}
 
-	if(EventManager::Instance().KeyPressed(SDL_SCANCODE_E))
+	// Attacking with spacebar
+	/*if(EventManager::Instance().KeyPressed(SDL_SCANCODE_E))
 	{
 		m_melee = !m_melee;
 		m_pPlayer->SetMelee(m_melee);
@@ -211,11 +212,22 @@ void TemplateScene::HandleEvents()
 	if(EventManager::Instance().KeyPressed(SDL_SCANCODE_SPACE))
 	{
 		m_pPlayer->Attack(m_melee);
-	}
+	}*/
 
+	// Attacking with mouse
 	if(EventManager::Instance().MousePressed(1))
 	{
-		m_pPlayer->GetHPBar()->TakeDamage(6);
+		m_pPlayer->Attack(true);
+	} else if(EventManager::Instance().MousePressed(3))
+	{
+		m_pPlayer->SetMelee(false);
+		m_pPlayer->Attack(false);
+	}
+
+	if(EventManager::Instance().KeyPressed(SDL_SCANCODE_H))
+	{
+		m_debugView = !m_debugView;
+		m_toggleGrid(m_debugView);
 	}
 	
 }
@@ -242,7 +254,7 @@ void TemplateScene::Start()
 	m_pPlayer->GetTransform()->position = glm::vec2(400,400);
 	m_pPlayer->InitHPBar();
 
-	//m_buildGrid();
+	m_buildGrid();
 
 	m_childrenWithoutTB = GetDisplayList().size(); // need to incremented any time you add a new display object that isnt a textbox
 
@@ -268,11 +280,11 @@ void TemplateScene::GUI_Function()
 
 	ImGui::Separator();
 
-	static bool debug = m_debugView; // debug view
+	bool debug = m_debugView; // debug view
 	if (ImGui::Checkbox("Toggle Debug View", &debug))
 	{
 		m_debugView = debug;
-		m_toggleGrid(debug);
+		m_toggleGrid(m_debugView);
 	}
 
 	float float2[2] = { m_pPlayer->GetTransform()->position.x, m_pPlayer->GetTransform()->position.y };

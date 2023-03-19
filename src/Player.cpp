@@ -346,9 +346,10 @@ void Player::Attack(bool melee)
 			}
 			break;
 		}
-	}
-	if (m_melee) {
-		m_pHitBox->SetType(GameObjectType::HITBOX);
+		if (m_melee) {
+			m_pHitBox->SetType(GameObjectType::HITBOX);
+		}
+
 	}
 	
 }
