@@ -1,0 +1,12 @@
+yume-idle-0 32 47 32 32
+yume-idle-1 32 79 32 32
+yume-idle-2 32 111 32 32
+yume-idle-3 32 143 32 32
+yume-run-0 0 47 32 32
+yume-run-1 64 47 32 32
+yume-run-2 0 79 32 32
+yume-run-3 64 79 32 32
+yume-run-4 0 111 32 32
+yume-run-5 64 111 32 32
+yume-run-6 0 143 32 32
+yume-run-7 64 143 32 32

@@ -1,0 +1,8 @@
+ness-idle-0 0 92 17 26
+ness-idle-1 67 93 17 25
+ness-idle-2 135 92 17 26
+ness-idle-3 221 93 17 25
+ness-run-0 16 92 17 26
+ness-run-1 84 92 17 25
+ness-run-2 152 92 17 26
+ness-run-3 238 92 17 25
